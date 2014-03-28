@@ -49,8 +49,8 @@ MONGO = {
 }
 
 MONGODB_SETTINGS = {
-    'USERNAME' : os.environ.get('MONGODB_USERNAME', ''),
-    'PASSWORD' : os.environ.get('MONGODB_PASSWORD', ''),
+    #'USERNAME' : os.environ.get('MONGODB_USERNAME', ''),
+    #'PASSWORD' : os.environ.get('MONGODB_PASSWORD', ''),
     'HOST'     : os.environ.get('MONGODB_HOST', 'localhost'),
     'PORT'     : int(os.environ.get('MONGODB_PORT', 27017)),
     #'NAME'     : os.environ.get('MONGODB_DATABASE', 'sofly'),
