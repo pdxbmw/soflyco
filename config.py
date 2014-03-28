@@ -49,9 +49,11 @@ MONGO = {
 }
 
 MONGODB_SETTINGS = {
-    'HOST'     : 'localhost',
-    'PORT'     : 27017,
-    'DB'       : 'sofly'
+    'USERNAME' : os.environ.get('MONGODB_USERNAME', ''),
+    'PASSWORD' : os.environ.get('MONGODB_PASSWORD', ''),
+    'HOST'     : os.environ.get('MONGODB_HOST', 'localhost'),
+    'PORT'     : os.environ.get('MONGODB_PORT', 27017),
+    'DB'       : os.environ.get('MONGODB_DATABASE', 'sofly')
 }
 
 config = copy.deepcopy(OAUTH2)
