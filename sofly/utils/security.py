@@ -9,7 +9,10 @@ import json
 class SecurityUtils(object):
     """
 
-        Some of this is redundant. Future TODOs.
+        Some of this is redundant. 
+
+          Future TODOs:
+            - get rid of PyCrypto and just use serializeer
 
     """
     
