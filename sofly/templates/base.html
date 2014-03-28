@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}SoFly! Fare Tracker{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Alaska Airlines fare tracker. Get money back on your Alaska Airlines flight.">
+        <meta name="keywords" content="Alaska, Airlines, Fare, Tracker, SoFly">
+        <meta name="author" content="Andi Greisel">
+        <meta charset="utf-8">
+
+        <link href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/yeti/bootstrap.min.css" rel="stylesheet">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/bootstrap-sortable.css', _external=True) }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/datepicker.css', _external=True) }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/style.css', _external=True) }}" rel="stylesheet">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='ico/favicon.ico', _external=True) }}">
+        {% block head_styles %}{% endblock head_styles %}
+
+        <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js"></script>    
+        <script type=text/javascript>
+            SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        </script>        
+        {% block head_scripts %}{% endblock %}
+    </head>
+    <body>
+
+        <div class="header-container container-fluid">
+            {% block header %}
+                {% include 'header.html' %}
+            {% endblock header %}
+        </div>
+
+        <div class="main-container">       
+            <div class="container-fluid">
+                <section class="masthead text-center row bottom-buffer">
+                    <div class="bottom-buffer fade-in">
+                        {% block masthead %}{% endblock masthead %}
+                    </div>
+                </section>
+            </div>
+
+            <div class="container">
+                {% block breadcrumbs %}{% endblock breadcrumbs %}
+            </div>
+
+            <div class="container fade-in">
+                {% block content %}{% endblock content %}  
+            </div>
+        </div>
+
+        <div class="container">
+            <div id="login-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="login-modal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Please sign in</h4>
+                        </div>
+                        <div class="modal-body">
+                            {% include '_login.html' %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+
+        <div id="footer">
+            <nav class="navbar navbar-fixed-bottom">
+                <div class="navbar-inner navbar-content-center container">
+                </div>
+            </nav>                
+        </div>
+
+        <script src="//cdnjs.cloudflare.com/ajax/libs/foundation/5.1.1/js/vendor/jquery.min.js"></script>    
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap-sortable.js', _external=True) }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap-datepicker.js', _external=True) }}"></script>
+        <script src="{{ url_for('static', filename='js/lib/main.js', _external=True) }}"></script>
+        {% block footer_scripts %}{% endblock %}
+    
+    </body>
+</html>

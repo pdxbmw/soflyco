@@ -1,0 +1,469 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+        <form id="alaska_lookup" class="top-buffer" action="{{ url_for('alaska') }}" method="post" role="form">
+            <fieldset>
+                <!--legend class="text-muted">By searching for your itinerary</legend-->
+                <div class="form-group form-inline"> 
+                    <div class="btn-toolbar" role="toolbar">
+                        <div class="btn-group" data-toggle="buttons">
+                            <h5 class="text-muted">Trip Type</h5>
+                            <label class="btn btn-default active"><input type="radio" name="round_trip" value="1" checked="checked">Round Trip</label>
+                            <label class="btn btn-default"><input type="radio" name="round_trip" value="0">One way</label>                                
+                        </div> 
+                        <div class="btn-group" data-toggle="buttons">
+                            <h5 class="text-muted">Stops</h5>
+                            <label class="btn btn-default active"><input type="radio" name="segments_filter_max" value="1" checked="checked">Direct</label>
+                            <label class="btn btn-default"><input type="radio" name="segments_filter_max" value="2">1</label>
+                            <label class="btn btn-default"><input type="radio" name="segments_filter_max" value="3">2</label>
+                            <label class="btn btn-default"><input type="radio" name="segments_filter_max" value="">Any</label>                                
+                        </div>  
+                        <div class="btn-group" data-toggle="buttons">
+                            <h5 class="text-muted">Seat Type</h5>
+                            <label class="btn btn-default active"><input type="radio" name="class_of_service" value="0" checked="checked">Economy/Coach</label>
+                            <label class="btn btn-default"><input type="radio" name="class_of_service" value="1">Business</label>
+                            <label class="btn btn-default"><input type="radio" name="class_of_service" value="2">First</label>
+                        </div>   
+                    </div>                                                                                 
+                </div>                            
+                <div class="airports-wrapper form-group">
+                    <label class="sr-only" for="from">From</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-plane fa-rotate-90"></span></span>
+                        <input class="airports form-control" name="from" placeholder="Origin" type="text" tabindex="1" autocomplete="off" required>
+                    </div>
+                    <div class="airports-results"></div>
+                </div>
+                <div class="airports-wrapper form-group dropdown">
+                    <label class="sr-only" for="to">To</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-plane fa-rotate-270"></span></span>                            
+                        <input class="airports form-control" name="to" placeholder="Destination" autocomplete="off" tabindex="2" required>
+                    </div>               
+                    <div class="airports-results dropdown-menu"></div>
+                </div>                                                 
+                <div class="input-group form-group">
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    <input type="text" class="input-date-range form-control" placeholder="Travel date(s)" autocomplete="off" tabindex="3" required>
+                    <input type="hidden" name="start">                            
+                    <input type="hidden" name="end">                            
+                </div>                                                                        
+            </fieldset>          
+            <input type="submit" class="btn btn-default search" value="Search" data-loading-text="Searching...">
+        </form>  
+
+
+    <form action="/flights" method="POST">
+        <input type="radio" name="IsRoundTrip" value="" />
+        <input type="radio" name="IsOneWay" value="" />
+        <input type="" name="IsMultiCity" value="" />
+        <input type="hidden" name="AdultCount" value="" />
+        <input type="hidden" name="ChildrenCount" value="" />
+        <input type="hidden" name="DepartureCity1" value="" />
+        <input type="hidden" name="DepartureCity2" value="" />
+        <input type="hidden" name="DepartureCity3" value="" />
+        <input type="hidden" name="DepartureCity4" value="" />
+        <input type="hidden" name="ArrivalCity1" value="" />
+        <input type="hidden" name="ArrivalCity2" value="" />
+        <input type="hidden" name="ArrivalCity3" value="" />
+        <input type="hidden" name="ArrivalCity4" value="" />
+        <input type="hidden" name="DepartureDate1" value="" />
+        <input type="hidden" name="DepartureDate2" value="" />
+        <input type="hidden" name="DepartureDate3" value="" />
+        <input type="hidden" name="DepartureDate4" value="" />
+        <input type="hidden" name="DepartureTime1" value="" />
+        <input type="hidden" name="DepartureTime2" value="" />
+        <input type="hidden" name="DepartureTime3" value="" />
+        <input type="hidden" name="DepartureTime4" value="" />
+        <input type="hidden" name="ReturnDate" value="" />
+        <input type="hidden" name="ReturnTime" value="" />
+        <input type="hidden" name="CabinType" value="" />
+        <input type="hidden" name="FareType" value="" />>" />
+        <input type="submit" value="Search">
+    </form>
+
+
+
+    <form action="https://www.alaskaair.com/Shopping/Flights/Shop" id="frmShopping" method="post">
+                <div class="toggleView" onclick="TogglePBView();">
+                    <h2 id="findFlightH" class="closeForm"><a id="toggleViewLink" href="javascript://Change Your Search">Change Your Search</a></h2>
+                </div>
+                <div class="form" id="divPBForm">
+                    <div class="left hbox" id="divBox1">
+                        <h4>Flight Type &amp; Travelers</h4>
+                        <div class="ftRadio clear">
+                            <input type="radio" id="roundTrip" value="1" class="noborder" checked name="flightType" onclick="displayPB(); $(this).focus();" />
+                            <label for="roundTrip" class="normal">Round-trip</label><br />
+                        </div>
+                        <div class="ftRadio clear">
+                            <input type="radio" id="oneWay" value="2" class="noborder"  name="flightType" onclick="displayPB(); $(this).focus();" />
+                            <label for="oneWay" class="normal">One-way</label><br />
+                        </div>
+                        <div class="ftRadio clear">
+                            <input type="radio" name="flightType" class="noborder" id="multiCity"  onclick="displayPB(); $(this).focus();" value="3" />
+                            <label for="multiCity" class="normal">Multi-city</label><br />
+                        </div>
+                        <div id="divAwardReservation">
+                            <div style="height: 8px;"></div>
+                            <input type="checkbox" id="awardReservation" class="noborder" onclick="displayPB(); $(this).focus();"  /> 
+                            <label for="awardReservation" class="normal">Use Miles</label>
+                        </div>
+                        <div style="height:20px;"></div>
+                        <div class="clear" id="divTravelers">
+                            <div class="left" id="divNumberOfAdults">
+                                <select id="adultCount" name="ShoppingRequestModel.AdultCount"><option>0 Adults</option>
+    <option selected="selected">1 Adult</option>
+    <option>2 Adults</option>
+    <option>3 Adults</option>
+    <option>4 Adults</option>
+    <option>5 Adults</option>
+    <option>6 Adults</option>
+    <option>7 Adults</option>
+    </select>
+                            </div>
+                            <div class="left">
+                                <select id="childrenCount" name="ShoppingRequestModel.ChildrenCount"><option selected="selected">0 Children</option>
+    <option>1 Child</option>
+    <option>2 Children</option>
+    <option>3 Children</option>
+    <option>4 Children</option>
+    <option>5 Children</option>
+    <option>6 Children</option>
+    <option>7 Children</option>
+    </select><br /><span class="smallText normal">(Ages 2-17)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="verticalSpacer">&nbsp;</div>
+                    <div class="left hbox" id="divBox2">
+                        <div class="citiesAndDates">
+                            <h4>Cities &amp; Dates</h4>
+                            <div id="divMultiCityFlight">
+                                <fieldset id="divCityAndDate1" class="height1">
+                                    <legend class="revenue">First Flight</legend>
+                                    <legend class="award">Departing Flight</legend>
+                                    <div id="divCity1" class="left">
+                                        <div class="left width8">
+                                            <label class="hidden" for="fromCity1">From</label>
+                                            <input autocorrect="off" class="fromCity text_" id="fromCity1" name="ShoppingRequestModel.DepartureCity1" title="From" type="text" value="Portland, OR (PDX-Portland Intl.)" />
+                                        </div>
+                                        <div class="left width9">
+                                            <label class="hidden" for="toCity1">To</label>
+                                            <input autocorrect="off" class="toCity text_" id="toCity1" name="ShoppingRequestModel.ArrivalCity1" title="To" type="text" value="Kahului, HI (OGG-Kahului/Maui)" />
+                                        </div>
+                                        <div class="left width7">
+                                            <label class="hidden" for="departureDate1">Date</label>
+                                            <input class="departureDate text_" id="departureDate1" name="ShoppingRequestModel.DepartureDate1" type="text" value="08/23/2014" />
+                                        </div>
+                                        <div class="left width7">
+                                            <label class="hidden" for="departureTime1">Time</label>
+                                            <select class="travelTime" id="departureTime1" name="ShoppingRequestModel.DepartureTime1"><option>Anytime</option>
+    <option>12am - 9am</option>
+    <option>6am - noon</option>
+    <option selected="selected">10am - 2pm</option>
+    <option>noon - 5pm</option>
+    <option>4pm - 8pm</option>
+    <option>6pm - 12am</option>
+    </select>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset id="divCityAndDate2" class="height1">
+                                    <legend class="revenue">Second</legend>
+                                    <legend class="award">Connecting Flight (optional)</legend>
+                                    <div id="divCity2" class="left">
+                                        <div class="left width8">
+                                            <label class="hidden" for="fromCity2">From</label>
+                                            <input autocorrect="off" class="fromCity text_" id="fromCity2" name="ShoppingRequestModel.DepartureCity2" title="From" type="text" value="From" />
+                                        </div>
+                                        <div class="left width9">
+                                            <label class="hidden" for="toCity2">To</label>
+                                            <input autocorrect="off" class="toCity text_" id="toCity2" name="ShoppingRequestModel.ArrivalCity2" title="To" type="text" value="To" />
+                                        </div>
+                                        <div class="left width7">
+                                            <label class="hidden" for="departureDate2">Date</label>
+                                            <input class="departureDate text_" id="departureDate2" name="ShoppingRequestModel.DepartureDate2" type="text" value="03/01/2014" />
+                                        </div>
+                                        <div class="left width7">
+                                            <label class="hidden" for="departureTime2">Time</label>
+                                            <select class="travelTime" id="departureTime2" name="ShoppingRequestModel.DepartureTime2"><option selected="selected">Anytime</option>
+    <option>12am - 9am</option>
+    <option>6am - noon</option>
+    <option>10am - 2pm</option>
+    <option>noon - 5pm</option>
+    <option>4pm - 8pm</option>
+    <option>6pm - 12am</option>
+    </select>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div id="divAwardFlightSep" class="clear"></div>
+                                <fieldset id="divCityAndDate3" class="height1">
+                                    <legend class="revenue">Third</legend>
+                                    <legend class="award">Returning Flight</legend>
+                                    <div id="divCity3" class="left">
+                                        <div class="left width8">
+                                            <label class="hidden" for="fromCity3">From</label>
+                                            <input autocorrect="off" class="fromCity text_" id="fromCity3" name="ShoppingRequestModel.DepartureCity3" title="From" type="text" value="From" />
+                                        </div>
+                                        <div class="left width9">
+                                            <label class="hidden" for="toCity3">To</label>
+                                            <input autocorrect="off" class="toCity text_" id="toCity3" name="ShoppingRequestModel.ArrivalCity3" title="To" type="text" value="To" />
+                                        </div>
+                                        <div class="left width7">
+                                            <label class="hidden" for="departureDate3">Date</label>
+                                            <input class="departureDate text_" id="departureDate3" name="ShoppingRequestModel.DepartureDate3" type="text" value="03/01/2014" />
+                                        </div>
+                                        <div class="left width7">
+                                            <label class="hidden" for="departureTime3">Time</label>
+                                            <select class="travelTime" id="departureTime3" name="ShoppingRequestModel.DepartureTime3"><option selected="selected">Anytime</option>
+    <option>12am - 9am</option>
+    <option>6am - noon</option>
+    <option>10am - 2pm</option>
+    <option>noon - 5pm</option>
+    <option>4pm - 8pm</option>
+    <option>6pm - 12am</option>
+    </select>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset id="divCityAndDate4" class="height1">
+                                    <legend class="revenue">Fourth</legend>
+                                    <legend class="award">Connecting Flight (optional)</legend>
+                                    <div id="divCity4" class="left">
+                                        <div class="left width8">
+                                            <label class="hidden" for="fromCity4">From</label>
+                                            <input autocorrect="off" class="fromCity text_" id="fromCity4" name="ShoppingRequestModel.DepartureCity4" title="From" type="text" value="From" />
+                                        </div>
+                                        <div class="left width9">
+                                            <label class="hidden" for="toCity4">To</label>
+                                            <input autocorrect="off" class="toCity text_" id="toCity4" name="ShoppingRequestModel.ArrivalCity4" title="To" type="text" value="To" />
+                                        </div>
+                                        <div class="left width7">
+                                            <label class="hidden" for="departureDate4">Date</label>
+                                            <input class="departureDate text_" id="departureDate4" name="ShoppingRequestModel.DepartureDate4" type="text" value="03/01/2014" />
+                                        </div>
+                                        <div class="left width7">
+                                            <label class="hidden" for="departureTime4">Time</label>
+                                            <select class="travelTime" id="departureTime4" name="ShoppingRequestModel.DepartureTime4"><option selected="selected">Anytime</option>
+    <option>12am - 9am</option>
+    <option>6am - noon</option>
+    <option>10am - 2pm</option>
+    <option>noon - 5pm</option>
+    <option>4pm - 8pm</option>
+    <option>6pm - 12am</option>
+    </select>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div id="divSingleCityPair">
+                                <div id="divFrom">
+                                    <div class="left cityPair">
+                                        <div class="clear" style="width: 232px;">
+                                            <div class="left"><label for="fromCity">From</label></div>
+                                            <div class="right">
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="clear">
+                                            <input autocorrect="off" class="text_" id="fromCity" name="ShoppingRequestModel.DepartureCity1" title="From" type="text" value="Portland, OR (PDX-Portland Intl.)" />
+                                            <div id="divIncludeNearbyDepartureAirports">
+                                                <input class="noborder" id="includeNearbyDepartureAirports" name="ShoppingRequestModel.IncludeNearbyDepartureAirports" type="checkbox" value="true" /><input name="ShoppingRequestModel.IncludeNearbyDepartureAirports" type="hidden" value="false" />
+                                                <label for="includeNearbyDepartureAirports" class="normal">Include nearby <span class="hidden">departure</span> airports</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="left" style="height: 80px;" id="divSingleCityPairDD">
+                                        <label for="departureDate">Departing</label>
+                                        <div class="clear height2">
+                                            <div class="left width7">
+                                                <input class="departureDate text_" id="departureDate" name="ShoppingRequestModel.DepartureDate1" type="text" value="08/23/2014" />
+                                            </div>
+                                            <div class="left width6">
+                                                <select class="travelTime" id="departureTime" name="ShoppingRequestModel.DepartureTime1"><option>Anytime</option>
+    <option>12am - 9am</option>
+    <option>6am - noon</option>
+    <option selected="selected">10am - 2pm</option>
+    <option>noon - 5pm</option>
+    <option>4pm - 8pm</option>
+    <option>6pm - 12am</option>
+    </select>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div id="divTo">
+                                    <div class="left cityPair">
+                                        <div id="to">
+                                            <div class="clear" style="width: 232px;">
+                                                <div class="left">
+                                                    <label for="toCity">To</label>
+                                                </div>
+                                                <div class="right">
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="clear">
+                                            <input autocorrect="off" class="text_" id="toCity" name="ShoppingRequestModel.ArrivalCity1" title="To" type="text" value="Kahului, HI (OGG-Kahului/Maui)" />
+                                            </div>
+                                            <div id="divIncludeNearbyArrivalAirports">
+                                                <input class="noborder" id="includeNearbyArrivalAirports" name="ShoppingRequestModel.IncludeNearbyArrivalAirports" type="checkbox" value="true" /><input name="ShoppingRequestModel.IncludeNearbyArrivalAirports" type="hidden" value="false" />
+                                                <label for="includeNearbyArrivalAirports" class="normal">Include nearby <span class="hidden">destination</span> airports</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="left">
+                                        <div id="divSingleCityPairDate">
+                                            <div id="divSingleCityPairRD" style='display:block'>
+                                                <label for="returnDate">Returning</label><br />
+                                                <div class="clear height2">
+                                                    <div class="left width7">
+                                                        <input class="departureDate text_" id="returnDate" name="ShoppingRequestModel.ReturnDate" type="text" value="09/03/2014" />
+                                                    </div>
+                                                    <div class="left width6">
+                                                        <select class="travelTime" id="returnTime" name="ShoppingRequestModel.ReturnTime"><option>Anytime</option>
+    <option>12am - 9am</option>
+    <option>6am - noon</option>
+    <option selected="selected">10am - 2pm</option>
+    <option>noon - 5pm</option>
+    <option>4pm - 8pm</option>
+    <option>6pm - 12am</option>
+    </select>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div id="divCalendarOption" class="clear">
+                                                    <div id="divLowFareCalendar" class="clear">
+                                                        <div class="left">
+                                                            <input class="noborder" id="lowFareCalendar" name="ShoppingRequestModel.ShopLowFareCalendar" onclick="shoppingWidget.ToggleNearbyAirportsVisibility();" type="checkbox" value="true" /><input name="ShoppingRequestModel.ShopLowFareCalendar" type="hidden" value="false" />
+                                                            <label for="lowFareCalendar" class="normal">Low Fare Calendar</label>
+                                                        </div>
+                                                    </div>
+                                                    <div id="divAwardCalendar" class="clear">
+                                                        <div class="left">
+                                                            <input class="noborder" id="awardCalendar" name="ShoppingRequestModel.ShopAwardCalendar" onclick="shoppingWidget.ToggleNearbyAirportsVisibility();" type="checkbox" value="true" /><input name="ShoppingRequestModel.ShopAwardCalendar" type="hidden" value="false" />
+                                                            <label for="awardCalendar" class="normal">Award Calendar</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="height:25px;">&nbsp;</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="verticalSpacer">&nbsp;</div>
+                    <div class="left hbox" id="divBox3">
+                        <h4 style="margin-bottom: 26px;"><span id="box3Title" class="noRes">
+                            
+                            Upgrades &amp; Discounts
+                            
+                        </span>&nbsp;</h4>
+                        <div style="height:120px;">
+                        
+                        <div id="divFareType" class="clear">
+                            <div class="left">
+                                <select id="fareType" name="ShoppingRequestModel.FareType"><option></option>
+    </select>
+                            </div>
+                            <div class="left">
+                                <a title="About Optional Upgradeable Fares" href="javascript:void(0);" onclick="parent.flightWidgetAF.ShowAboutCT();" class="q" style="width:20px; height:20px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hidden">About Optional Upgradeable Fares</span></a>
+                            </div>
+                        </div>
+                        <div id="divAwardOption" class="clear">
+                            <div class="left noRes">
+                                <select id="awardOption" name="ShoppingRequestModel.AwardOption"><option value="MilesOnly">Miles Only</option>
+    <option value="AS50Restricted">Miles &amp; Money - Lowest Price</option>
+    <option value="AS50Unrestricted">Miles &amp; Money - Unrestricted</option>
+    </select>
+                            </div>
+                            <div class="left noRes">
+                                <a title="About Award Options" href="javascript:void(0);" onclick='parent.flightWidgetAF.ShowAwardOptions();' class="q" style="width:20px; height:20px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hidden">About Award Options</span></a>
+                            </div>
+                        </div>
+                        <div id="divCabinType" class="clear">
+                            <div class="left">
+                                <select id="cabinType" name="ShoppingRequestModel.CabinType"><option value="Coach">Coach</option>
+    <option value="First Class">First Class</option>
+    </select>
+                            </div>
+                        </div>
+                        <div id="divDiscountCode" class="clear">
+                            <div class="left"><input type="text" id="discountCode" class="text_" value="Discount Code" title="Discount Code" maxlength="30" autocorrect="off" /></div>
+                            <div class="left">
+                                <a id="lnkAboutDiscountCode" title="About Discount Codes" href="javascript:void(0);" onclick='parent.$.showAboutDiscountCode($("#discountCode").val().toLowerCase() == "discount code" ? "" : $("#discountCode").val());' class="q" style="width:20px; height:20px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hidden">About Discount Codes</span></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear" id="divFindFlight">
+                        <input type="submit" class="primaryMedium" id="findFlights" value="FIND FLIGHTS" onclick="shoppingWidget.FindFlights($(this), setWidgetHeight); return false" />
+                    </div>
+                </div>
+                    <input type="hidden" name="IsRoundTrip" value="" />
+                    <input type="hidden" name="IsOneWay" value="" />
+                    <input type="hidden" name="IsMultiCity" value="" />
+                    <input type="hidden" name="IsAwardReservation" value="" />
+                    <input type="hidden" name="AdultCount" value="" />
+                    <input type="hidden" name="ChildrenCount" value="" />
+                    <input type="hidden" name="UMNRAnswer" value="" />
+                    <input type="hidden" name="DepartureCity1" value="" />
+                    <input type="hidden" name="DepartureCity2" value="" />
+                    <input type="hidden" name="DepartureCity3" value="" />
+                    <input type="hidden" name="DepartureCity4" value="" />
+                    <input type="hidden" name="ArrivalCity1" value="" />
+                    <input type="hidden" name="ArrivalCity2" value="" />
+                    <input type="hidden" name="ArrivalCity3" value="" />
+                    <input type="hidden" name="ArrivalCity4" value="" />
+                    <input type="hidden" name="DepartureDate1" value="" />
+                    <input type="hidden" name="DepartureDate2" value="" />
+                    <input type="hidden" name="DepartureDate3" value="" />
+                    <input type="hidden" name="DepartureDate4" value="" />
+                    <input type="hidden" name="DepartureTime1" value="" />
+                    <input type="hidden" name="DepartureTime2" value="" />
+                    <input type="hidden" name="DepartureTime3" value="" />
+                    <input type="hidden" name="DepartureTime4" value="" />
+                    <input type="hidden" name="ReturnDate" value="" />
+                    <input type="hidden" name="ReturnTime" value="" />
+                    <input type="hidden" name="DiscountCode" value="" />
+                    <input type="hidden" name="IncludeNearbyDepartureAirports" value="" />
+                    <input type="hidden" name="IncludeNearbyArrivalAirports" value="" />
+                    <input type="hidden" name="ShopAwardCalendar" value="" />
+                    <input type="hidden" name="ShopLowFareCalendar" value="" />
+                    <input type="hidden" name="CabinType" value="" />
+                    <input type="hidden" name="FareType" value="" />
+                    <input type="hidden" name="AwardOption" value="" />
+                    <input type="hidden" name="DiscountCode" value="" />
+                    <input type="hidden" name="ContractFareTypeKey" value="" />
+                    <input type="hidden" name="ShowOnlyContractFares" value="" />
+                    <input type="hidden" name="ShowContractAndAllFares" value="" />
+
+                    <input type="hidden" id="fareOptions" />
+                    <input type="hidden" id="fareOptionsOneWayRoundTrip" value=",MILEAGEUPG,GOLDUPG,MVPUPG,GUESTUPG" />
+                    <input type="hidden" id="fareOptionsMultiCity" value="Coach,UNRESTRICTED,First,First|UNRESTRICTED,MILEAGEUPG,MVPUPG,GOLDUPG,GUESTUPG"/>
+
+                    <select id="fareTypeOneWayRoundTrip" name="ShoppingRequestModel.FareType" style="visibility:hidden"><option value="NoUpgradePreference">No Upgrade Preference</option>
+    <option value="MILEAGEUPG">Mileage Upgrade</option>
+    <option value="MVPUPG">MVP&#174; Upgrade</option>
+    <option value="GOLDUPG">MVP&#174; Gold Upgrade</option>
+    <option value="GUESTUPG">MVP&#174; Gold Guest Upgrade</option>
+    </select>
+                    <select id="fareTypeMultiCity" name="ShoppingRequestModel.FareType" style="visibility:hidden"><option selected="selected" value="Coach">Lowest Coach</option>
+    <option value="UNRESTRICTED">Refundable Coach</option>
+    <option value="First">Lowest First</option>
+    <option value="First|UNRESTRICTED">Refundable First</option>
+    <option value="MILEAGEUPG">Mileage Upgrade</option>
+    <option value="MVPUPG">MVP&#174; Upgrade</option>
+    <option value="GOLDUPG">MVP&#174; Gold Upgrade</option>
+    <option value="GUESTUPG">MVP&#174; Gold Guest Upgrade</option>
+    </select>
+                    <input id="searchFareType" name="ShoppingRequestModel.FareType" type="hidden" value="Coach" />
+                </div>
+    </form>
+{% endblock content %}

@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block head_styles %}
+    <style>
+        article section {
+            margin: 60px 0;
+        }
+
+        article section .row {
+            margin: 40px 0;
+        }
+
+        section h3.well {
+            color: #333;
+            margin-bottom: 40px;
+        }
+        #how_it_works .thumbnail {
+            border: 0 none;
+            box-shadow: none;
+        }
+        #how_it_works .thumbnail i {
+            color: #333;
+            font-size: 80px;
+        }
+    </style>
+{% endblock head_styles %}
+
+{% block masthead %}
+    <h1>SoFly!</h1>
+    <span class="text-muted">
+        {{ tagline() }}
+    </span> 
+{% endblock masthead %}
+
+{% block content %}
+    <article class="container">
+
+        <section id="how_it_works" class="row top-buffer text-center">
+            
+            <h3 class="inset">How It Works</h3>
+
+            <div class="row">        
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </div>
+                    Locate your itinerary
+                    <div class="text-muted">
+                        We'll find your itinerary and start tracking the price.
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <i class="glyphicon glyphicon-envelope"></i>
+                    </div>
+                    Receive refund alerts
+                    <div class="text-muted">
+                        When the price drops, we'll let you know.
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <i class="glyphicon glyphicon-usd"></i>
+                    </div>
+                    Claim your refund
+                    <div class="text-muted">
+                        You'll get credit towards future flights. That's it!
+                    </div>
+                </div>
+            </div>
+
+            <div class="row text-center">
+                <a href="{{ url_for('select') }}" class="btn btn-success btn-lg">Get started. It's free!</a>
+            </div>
+
+            <div class="row top-buffer">
+                <div class="col-md-12 col-md-offset">
+                    <p class="bs-callout bs-callout-info">
+                        No need to watch airfare prices before you buy. We'll get you the lowest fare <i>after</i> your purchase.
+                    </p>                    
+                    <p class="text-muted">
+                        SoFly! is the only fare tracker designed specifically for Alaska Airlines.
+                    </p>                    
+                </div>
+            </div>
+        
+        </section>
+
+
+        <div class="bs-callout bs-callout-info hidden">
+            <p class="text-center">Get money back <b>after</b> your purchase.</p>
+        </div>
+
+
+
+    </article>
+{% endblock content %}

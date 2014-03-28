@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block masthead %}
+    <h1>Search</h1>
+    <span class="text-muted">
+        Let's find your flight
+    </span> 
+{% endblock masthead %}
+
+{% block breadcrumbs %}
+    {% include '_start_over.html' %}
+{% endblock breadcrumbs %}
+
+{% block content %}
+    {% include 'search/_search.html'%}
+{% endblock content %}

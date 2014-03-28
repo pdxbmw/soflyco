@@ -1,0 +1,46 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>SoFly! BETA</title>
+    <style media="all" type="text/css">
+        {% include 'email/css/bootstrap-email.css' %}
+        {# include 'email/css/bootswatch-yeti.min.css' #}
+    </style>
+</head>
+<body>
+    <table cellspacing="0" cellpadding="0" border="0" width="100%">
+        <tr>
+            <td class="navbar navbar-inverse" align="center">
+                <!-- This setup makes the nav background stretch the whole width of the screen. -->
+                <table width="650px" cellspacing="0" cellpadding="3" class="container">
+                    <tr class="navbar navbar-inverse">
+                        <td colspan="4"><a class="brand" href="http://www.sofly.co">SoFly!</a></td>
+                        <td><ul class="nav pull-right"><li><a href="[YOUR LOGIN URL]">Log On</a></li></ul></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td bgcolor="#FFFFFF" align="center">
+                <table width="650px" cellspacing="0" cellpadding="3" class="container">
+                    <tr>
+                        <td>{% block content %}{% endblock content %}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td bgcolor="#FFFFFF" align="center">
+                <table width="650px" cellspacing="0" cellpadding="3" class="container">
+                    <tr>
+                        <td>
+                            <hr>
+                            <p>[PUT YOUR COPYRIGHT OR OTHER FOOTERY GOODNESS HERE]</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

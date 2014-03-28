@@ -1,0 +1,14 @@
+--- 
+applications: 
+  .: 
+    url: ${name}.${target-base}
+    framework: 
+      info: 
+        exec: 
+        mem: 64M
+        description: Python WSGI Application
+      name: wsgi
+    mem: 64M
+    infra: aws
+    instances: 1
+    name: flights

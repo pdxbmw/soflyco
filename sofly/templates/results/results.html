@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block masthead %}
+    <h1>Results</h1>
+    <span class="text-muted"></span> 
+{% endblock masthead %}
+
+{% block breadcrumbs %}
+    {% include '_start_over.html' %}
+{% endblock breadcrumbs %}
+
+{% block content %}
+    {% include 'results/_results.html' %}
+{% endblock content %}
+
+{% block footer_scripts %}
+    <script>
+        {% if results.id_table is defined %}
+            ID_TABLE = $.parseJSON('{{ results.id_table|safe }}');
+        {% endif %}
+
+        {% if results.reservation is defined %}
+            {% for flight in results.reservation.flights %}
+                
+                setTimeout(function() {
+                    $('#results_{{ loop.index0 }} tbody tr[data-identifier="{{ flight.identifier }}"]').trigger('only-result');
+                }, 1000*{{ loop.index }}); 
+                
+                {% if loop.last %}
+                    setTimeout(function() {
+                        $('.loading-spinner').addClass('hidden');
+                        $('#results section').hide().removeClass('invisible').fadeIn();
+                    }, 1000*{{ loop.index + 2 }});
+                
+                {% endif %}
+            
+            {% endfor %}
+        {% endif %}       
+    </script>
+    <script src="{{ url_for('static', filename='js/lib/results.js', _external=True) }}"></script>
+{% endblock %}

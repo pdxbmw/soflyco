@@ -1,0 +1,40 @@
+{% extends 'email/base.html' %}
+
+{% block extra_styles %}
+    <style>
+            
+    </style>
+{% endblock extra_styles %}
+
+{% block header %}
+    Fare Watched
+{% endblock header %}
+
+{% block sub_header %}
+    We are now tracking the price for you.
+{% endblock sub_header %}
+
+{% block content %}
+    <div class="panel panel-default" data-search="{{ search_params_encoded }}">
+        <div class="panel-heading">
+            <h3>${{ itinerary.price }}</h3>
+        </div>
+        <div class="panel-body">
+            {% include 'email/_table.html' %}      
+        </div>
+        <div class="panel-footer text-center">
+            <span class="text-success">
+                <b></b>
+            </span>
+        </div>    
+    </div>
+{% endblock content %}
+
+{% block footer %}
+    <a class="btn btn-danger btn-lg" href="#" style="">
+        Click here to stop tracking
+    </a>
+    <div style="font-size: 14px; padding-top:20px">
+        <small class="text-muted"></small>
+    </div>
+{% endblock footer %}

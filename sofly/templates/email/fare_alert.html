@@ -1,0 +1,41 @@
+{% extends 'email/base.html' %}
+
+{% block extra_styles %}
+    <style>
+            
+    </style>
+{% endblock extra_styles %}
+
+{% block header %}
+    Fare Alert
+{% endblock header %}
+
+{% block sub_header %}
+    The price has dropped.
+{% endblock sub_header %}
+
+{% block content %}
+    <div class="panel panel-default" data-search="{{ search_params_encoded }}">
+        <div class="panel-heading">
+            <h3>${{ itinerary.price }}</h3>
+        </div>
+        <div class="panel-body">
+            {% include 'email/_table.html' %}      
+        </div>
+        <div class="panel-footer text-center">
+            {% set difference = reservation.paid|int - itinerary.price|int %}
+            <span class="text-danger">
+                <b>The price is now ${{ difference }} less.</b>
+            </span>
+        </div>    
+    </div>
+{% endblock content %}
+
+{% block footer %}
+    <a class="btn btn-success btn-lg" href="{{ claim_link }}" style="">
+        Click here to claim airfare credit
+    </a>
+    <div style="font-size: 14px; padding-top:20px">
+        <small class="text-muted">Using this link helps us track your claims and update your alerts.</small>
+    </div>
+{% endblock footer %}

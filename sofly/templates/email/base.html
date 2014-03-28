@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>SoFly! Low Price Guaranteer</title>
+    <style type="text/css">
+        @font-face {
+            font-family: 'Open Sans';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Open Sans'), local('OpenSans'), url(http://themes.googleusercontent.com/static/fonts/opensans/v6/cJZKeOuBrn4kERxqtaUH3bO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+        }
+    
+        #outlook a {padding:0;} 
+        body{width:100% !important; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; margin:0; padding:0;} 
+        .external-class {width:100%;}
+        .external-class, .external-class p, .external-class span, .external-class font, .external-class td, .external-class div {line-height: 100%;}
+        #background-table {margin:0; padding:0; width:100% !important; line-height: 100% !important;}
+        img {outline:none; text-decoration:none; -ms-interpolation-mode: bicubic;} 
+        a img {border:none;} 
+        .image_fix {display:block;}
+        p {margin: 1em 0;}
+        h1, h2, h3, h4, h5, h6 {}
+        h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {}
+        h1 a:active, h2 a:active,  h3 a:active, h4 a:active, h5 a:active, h6 a:active {color: #008CBA !important; text-decoration: none; }
+        h1 a:visited, h2 a:visited,  h3 a:visited, h4 a:visited, h5 a:visited, h6 a:visited { color: #008CBA !important; text-decoration: none; }
+        table td {border-collapse: collapse;}
+        table { border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt; }
+        a {color: #008CBA; text-decoration: none; }
+
+
+        body, #body { font-weight: 300; padding: 10px;}
+        body, table, tr, th, td, div, span, small, a, h1, h3, p { font-family: 'Open Sans', Gill Sans, Arial, Helvetica, sans-serif; }
+        #welcome { background: #333; color: #fff; margin-bottom: 30px; padding: 30px; text-align: center; }
+
+        .panel-heading h3 { font-size: 20px; font-weight: 600; }
+        .table { font-size: 14px; }        
+        .table th { color: #999; padding-bottom:10px; display:none;  }
+        .table td { padding: 8px 10px;  }
+        table tr.odd td { background-color:#f5f5f5; }   
+
+        #footer .btn {font-size: 14px; line-height: 30px; padding: 10px 20px; vertical-align: middle; text-transform:uppercase} 
+
+    </style>
+
+    <style>
+        {# include 'email/css/bootstrap-email.css' #}
+        {% include 'email/css/style.css' %}
+    </style>
+
+    {% block extra_styles %}{% endblock extra_styles %}
+
+    <!-- Targeting Windows Mobile -->
+    <!--[if IEMobile 7]>
+    <style type="text/css">
+    
+    </style>
+    <![endif]-->   
+
+    <!-- ***********************************************
+    ****************************************************
+    END MOBILE TARGETING
+    ****************************************************
+    ************************************************ -->
+
+    <!--[if gte mso 9]>
+        <style>
+        /* Target Outlook 2007 and 2010 */
+        </style>
+    <![endif]-->
+</head>
+<body>
+    <table cellpadding="0" cellspacing="0" border="0" id="background-table">
+        <tr>
+            <td id="body" valign="top"> 
+                <table  cellpadding="0" cellspacing="0" border="0" width="" align="center">
+                    <tr>
+                        <td valign="top" height="80">
+                            <h3 class="text-muted">
+                                <a href="/">SoFly!</a><span class="badge beta">beta</span>
+                            </h3>
+                        </td>
+                    </tr>            
+                    <tr>
+                        <td width="" valign="">
+                            <table cellpadding="0" cellspacing="0" border="0" align="center" style="background: #fcfcfc;">
+                                <tr>
+                                    <td id="welcome" valign="top" align="center" height="120" style="background: #333;">
+                                        <h1>{% block header %}{% endblock header %}</h1>
+                                        <span class="text-muted">
+                                            {% block sub_header %}{% endblock sub_header %}
+                                        </span> 
+                                    </td>
+                                </tr>            
+                                <tr>
+                                    <td style="padding:20px">
+                                        {% block content %}{% endblock content %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="footer" valign="middle" align="center" style="padding-bottom:20px;">
+                                        {% block footer %}{% endblock footer %}
+                                    </td>
+                                </tr>
+                            </table>                             
+                        </td>
+                    </tr>
+                </table>                
+            </td>
+        </tr>
+    </table>  
+</body>
+</html>

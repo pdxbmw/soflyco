@@ -1,0 +1,16 @@
+<thead>
+    <tr>
+        <th class="hidden">Date</th>
+        <th data-defaultsort="disabled">From</th>
+        <th>Depart</th>
+        <th data-defaultsort="disabled">To</th>
+        <th>Arrive</th>
+        <th data-defaultsort="asc">Duration</th>
+        <th>Stops</th>
+        <th data-defaultsort="disabled">Layover</th>  
+        <th class="hide-in-summary" data-defaultsort="disabled">Numbers</th>  
+        {% if results and not results.is_by_price %}
+            <th class="">Price</th>
+        {% endif %}
+    </tr>
+</thead>

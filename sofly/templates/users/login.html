@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block masthead %}
+    <h1>Login</h1>
+    <span class="text-muted"></span> 
+{% endblock masthead %}
+
+
+{% block content %}
+
+    <section class="row top-buffer">
+        <div class="top-buffer">
+
+            {% from "forms/macros.html" import render_field %}
+            <form class="form-horizontal" method="post" action="." role="form">
+                {{ form.csrf_token }}
+                {{ render_field(form.email, class="form-control") }}
+                {{ render_field(form.password, class="form-control") }}
+                <div class="col-md-7 col-md-offset-3">
+                    <input type="submit" value="Login" class="btn btn-success btn-lg top-buffer">
+                </div>
+            </form>
+            
+            <div class="top-buffer hidden">
+                <a href="{{ url_for('users.register') }}">Register</a>
+            </div>
+
+        </div>
+    </section>
+    
+{% endblock %}

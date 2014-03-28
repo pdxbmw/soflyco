@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block head_styles %}
+    <style>
+
+    </style>
+{% endblock head_styles %}
+
+{% block masthead %}
+    <h1>SoFly!</h1>
+    <span class="text-muted">
+        {{ tagline() }}
+    </span> 
+{% endblock masthead %}
+
+{% block content %}
+    <article class="container">
+
+        <section class="row top-buffer text-center">
+            <h3 class="inset">Let's locate your itinerary</h3>
+
+            <div class="top-buffer col-md-6">
+                <a href="{{ url_for('search.reservation') }}" class="btn btn-primary block">I purchased a ticket on alaskaair.com</a>
+            </div>
+            
+            <div class="top-buffer col-md-6">
+                <a href="{{ url_for('search.search') }}" class="btn btn-primary block">I want to search for flights</a>                 
+            </div>
+            
+        </section>
+
+    </article>
+{% endblock content %}

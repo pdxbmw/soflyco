@@ -1,0 +1,43 @@
+{% extends 'base.html' %}}
+
+{% set outbound = flights.outbound %}
+{% set inbound  = flights.inbound %}
+{% set reservation = flights.reservation %}
+
+{% block masthead %}
+    <h1>Results</h1>
+    <span class="text-muted">
+        {% if reservation %}
+            We found your itinerary
+        {% else %}
+            {{ outbound|count|apnumber|title }} departing flight{{ outbound|pluralize }}
+            {% if inbound %} and {{ inbound|count|apnumber }} returning{% endif%} flight{{ inbound|pluralize }} found
+        {% endif %}
+    </span> 
+{% endblock masthead %}
+
+{% block breadcrumbs %}
+    {% include '_start_over.html' %}
+{% endblock breadcrumbs %}
+
+{% block content %}
+    {% include '_flights.html' %}
+{% endblock content %}
+
+{% block footer_scripts %}
+    {% if reservation %}
+    <script>
+        $(function() {
+            // if reservation, auto select
+            $('#outbound tbody tr[data-identifier="{{ reservation.outbound.identifier }}"]').trigger('only-result');
+            setTimeout(function() {
+                $('#inbound tbody tr[data-identifier="{{ reservation.inbound.identifier }}"]').trigger('only-result');
+                setTimeout(function() {
+                    $('.loading-spinner').addClass('hidden');
+                    $('#results section').hide().removeClass('invisible').fadeIn();
+                }, 500);
+            }, 500);
+        });
+    </script>
+    {% endif %}
+{% endblock %}

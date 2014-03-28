@@ -1,0 +1,55 @@
+<div class="container">
+    <header class="row">
+        <nav class="header">
+            <ul class="nav nav-pills pull-right">
+                {% if g.user %}
+                    <li class="text-muted welcome-user">
+                        Hi, {{ g.user.first_name }} 
+                        {% if not g.user.verified %}
+                            <span class="badge">unverified</span>
+                        {% endif %}
+                    </li>
+                    <li class="divider-vertical"></li>
+                    <li><a href="{{ url_for('users.logout') }}">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('users.register') }}">Register</a></li>
+                    <li><a href="{{ url_for('users.login') }}">Login</a></li>
+                    {#
+                    <li class="dropdown" id="login_dropdown">
+                         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
+                             Sign in<b class="caret"></b>
+                         </a>
+                         <div class="dropdown-menu pull-right">
+                            <div class="well">
+                                {% include '_login.html' %}
+                            </div>
+                         </div>
+                     </li> 
+                     #}
+                 {% endif %}       
+            </ul>
+            <h3 class="text-muted logo pull-left right-buffer">
+                <a href="{{ url_for('index') }}">SoFly!</a>
+                <span class="badge beta">beta</span>
+            </h3>            
+            <ul class="nav nav-pills pull-left left-buffer">
+                <li class="divider-vertical"></li>
+                <li><a href="{{ url_for('select') }}">Search</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="row header-messages">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <ul class="growl-alerts list-unstyled text-center">
+                    {% for category, message in messages %}
+                        <li class="alert alert-{{ category|default('info') }} alert-dismissable slidedown">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            {{ message|safe }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}        
+    </div> 
+</div>

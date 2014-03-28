@@ -1,0 +1,96 @@
+{% set form = request.args.f %}
+
+<article id="search" class="container">
+    <section class="row top-buffer">
+        <div class="">
+            <!--h2 class="text-center">Please enter your information</h2--> 
+
+            {% if form == 'r' or not form %}
+
+            <a href="{{ url_for('search', f='r') }}" class="btn btn-info block top-buffer toggle-form {% if form %}hidden{% endif %}">I purchased a ticket on alaskaair.com</a>
+            <form id="ticket_lookup" class="top-buffer {% if not form %}hidden{% endif %}" action="{{ url_for('flights', f=form) }}" method="post" role="form">
+                <fieldset>
+                    <!--legend class="btn btn-primary">By locating an existing reservation</legend-->
+                    <div class="form-group form-inline"> 
+                        <label class="sr-only" for="name">Traveler's Last Name</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                            <input class="form-control" type="input" name="name" placeholder="Traveler's Last Name" required>
+                        </div>
+                    </div>
+                    <div class="form-group form-inline"> 
+                        <label class="sr-only" for="code">Confirmation Code or E-ticket #</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="fa fa-ticket"></span></span>
+                            <input class="form-control" type="input" name="code" placeholder="Confirmation Code or E-ticket #" required>
+                        </div>
+                    </div>
+                </fieldset>
+                <input type="submit" class="btn btn-default" value="Search" data-loading-text="Searching...">
+            </form>
+
+            {% endif %}
+
+            {% if form == 's' or not form %}
+
+            <a href="{{ url_for('search', f='s') }}" class="btn btn-info block top-buffer toggle-form {% if form %}hidden{% endif %}">I want to search for flights</a>
+            <form id="flight_lookup" class="top-buffer {% if not form %}hidden{% endif %}" action="{{ url_for('flights') }}" method="post" role="form">
+                <fieldset>
+                    <!--legend class="text-muted">By searching for your itinerary</legend-->
+                    <div class="form-group form-inline"> 
+                        <div class="btn-toolbar" role="toolbar">
+                            <div class="btn-group" data-toggle="buttons">
+                                <h5 class="text-muted">Trip Type</h5>
+                                <label class="btn btn-default active"><input type="radio" name="round_trip" value="1" checked="checked">Round trip</label>
+                                <label class="btn btn-default"><input type="radio" name="round_trip" value="0">One way</label>       
+                                <label class="btn btn-default"><input type="radio" name="round_trip" value="2">Multi city</label>                                
+                            </div> 
+                            <div class="btn-group" data-toggle="buttons">
+                                <h5 class="text-muted">Stops</h5>
+                                <label class="btn btn-default active"><input type="radio" name="segments_filter_max" value="1" checked="checked">Nonstop</label>
+                                <label class="btn btn-default"><input type="radio" name="segments_filter_max" value="2">1</label>
+                                <label class="btn btn-default"><input type="radio" name="segments_filter_max" value="3">2+</label>
+                            </div>  
+                            <div class="btn-group" data-toggle="buttons">
+                                <h5 class="text-muted">Seat Type</h5>
+                                <label class="btn btn-default active"><input type="radio" name="class_of_service" value="0" checked="checked">Economy/Coach</label>
+                                <label class="btn btn-default"><input type="radio" name="class_of_service" value="1">Business/First</label>
+                            </div>   
+                        </div>                                                                                 
+                    </div>                            
+                    <div class="airports-wrapper form-group">
+                        <label class="sr-only" for="from">From</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-plane fa-rotate-90"></span></span>
+                            <input class="airports form-control" name="from" placeholder="Origin" type="text" tabindex="1" autocomplete="off" required>
+                        </div>
+                        <div class="airports-results"></div>
+                    </div>
+                    <div class="airports-wrapper form-group dropdown">
+                        <label class="sr-only" for="to">To</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-plane fa-rotate-270"></span></span>                            
+                            <input class="airports form-control" name="to" placeholder="Destination" autocomplete="off" tabindex="2" required>
+                        </div>               
+                        <div class="airports-results dropdown-menu"></div>
+                    </div>                                                 
+                    <div class="input-group form-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        <input type="text" class="input-date-range form-control" placeholder="Travel date(s)" autocomplete="off" tabindex="3" required>
+                        <input type="hidden" name="start">                            
+                        <input type="hidden" name="end">                            
+                    </div>                                                                        
+                </fieldset>          
+                <input type="submit" class="btn btn-default search" value="Search" data-loading-text="Searching...">
+            </form>  
+
+            {% endif %}
+
+            <div class="progress progress-striped top-buffer active hidden">
+                <div class="progress-bar" role="progressbar" style="width: 100%"></div>
+            </div>
+        </div>
+
+    </section>
+
+</article>

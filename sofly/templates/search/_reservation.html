@@ -1,0 +1,119 @@
+{% set email = target == 'email' %}
+
+{% if email %}
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="//netdna.bootstrapcdn.com/bootswatch/3.1.0/yeti/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+{% endif %}
+
+{% if ticket.paid %}
+{% set paid_more = ticket.paid >= flight.price %}
+<div class="alert alert-{% if paid_more %}danger{% else %}success{% endif %}">
+    {% if paid_more %}
+        Uh oh, the price has gone down.
+    {% else %}
+        Congratulations, you paid less than the current price.
+    {% endif %} 
+    &nbsp;This flight cost you <b>${{ ticket.paid }} USD</b>.
+</div>
+{% endif %}
+
+{% if flight.outbound %}
+    <div class="panel panel-default" 
+        data-identifier="{{ flight.identifier }}" 
+        data-price="{{ flight.price }}" 
+        data-paid="{{ ticket.paid }}" 
+        data-name="{{ ticket.name }}"
+        data-code="{{ ticket.code }}"    
+        data-expires="{{ flight.expires }}"
+        data-data='{{ flight.encrypted }}'>
+            
+        <div class="panel-heading">
+            <h3>${{ flight.price }} USD</h3>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-condensed">
+                <thead>
+                    <tr></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Depart</td>
+                        <td>{{ flight.outbound.departure_date }}</td>
+                        <td>{{ flight.outbound.departure.airport_code }}</td>
+                        <td>{{ flight.outbound.departure.depart }} {{ flight.outbound.departure.ampm }}</td>
+                        <td>{{ flight.outbound.arrival.airport_code }}</td>
+                        <td>{{ flight.outbound.arrival.arrive }} {{ flight.outbound.arrival.ampm }}</td>            
+                        <td>{{ flight.outbound.duration }}</td>
+                        <td>{{ flight.outbound.no_stops }}</td>
+                        <td>{{ flight.outbound.stops }}</td>
+                        <td>{{ flight.outbound.flight_no }}</td>
+                    </tr>
+                    {% if flight.inbound %}
+                    <tr>
+                        <td>Return</td>
+                        <td>{{ flight.inbound.departure_date }}</td>
+                        <td>{{ flight.inbound.departure.airport_code }}</td>
+                        <td>{{ flight.inbound.departure.depart }} {{ flight.inbound.departure.ampm }}</td>
+                        <td>{{ flight.inbound.arrival.airport_code }}</td>
+                        <td>{{ flight.inbound.arrival.arrive }} {{ flight.inbound.arrival.ampm }}</td>            
+                        <td>{{ flight.inbound.duration }}</td>
+                        <td>{{ flight.inbound.no_stops }}</td>
+                        <td>{{ flight.inbound.stops }}</td>
+                        <td>{{ flight.inbound.flight_no }}</td>
+                    </tr> 
+                    {% endif %}
+                </tbody>          
+            </table>
+        </div>
+        {% if not email %}
+        <div class="panel-footer text-right">
+            <button class="btn btn-success watch-fare" data-loading-text="Submitting...">Watch fare</button>            
+        </div>
+        {% endif %}
+    </div>
+{% else %}
+    <div>
+        <div class="panel-heading">
+            <h3>$ USD</h3>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-condensed">
+                <thead>
+                    <tr></tr>
+                </thead>
+                <tbody>
+                    {% for flight in direction %}
+                        {% set first_segment = flight.segment|first %}
+                        {% set last_segment = flight.segment|last %}
+                        {% set price = flight.prices.coach.lowest|float %}
+                        <tr class="panel panel-default" 
+                            data-identifier="{{ flight.identifier }}" 
+                            data-price="{{ price }}" 
+                            data-paid="{{ ticket.paid }}" 
+                            data-name="{{ ticket.name }}"
+                            data-code="{{ ticket.code }}"    
+                            data-expires="{{ flight.expires }}"
+                            data-data='{{ flight.encrypted }}'>
+                            <td>{{ label }}</td>
+                            <td>{{ first_segment.departure.datetime.strftime('%a, %b %d') }}</td>
+                            <td class="airport-code">{{ first_segment.departure.airport_code }}</td>
+                            <td>{{ first_segment.departure.datetime.strftime('%I:%M %p').lstrip('0') }}</td>
+                            <td class="airport-code">{{ last_segment.arrival.airport_code }}</td>
+                            <td>{{ last_segment.arrival.datetime.strftime('%I:%M %p').lstrip('0') }}</td>
+                            <td>{{ flight.duration }}</td>
+                            <td>{{ flight.no_stops|no_stops }}</td>
+                            <td class="airport-code">{{ flight.stops|join(', ') }}</td>
+                            <td>{{ flight.flight_no|join(', ') }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>          
+            </table>
+        </div>
+        {% if not email %}
+        <div class="panel-footer text-right">
+            <button class="btn btn-success watch-fare" data-loading-text="Submitting...">Watch fare</button>            
+        </div>
+        {% endif %}
+    </div>
+{% endif %}

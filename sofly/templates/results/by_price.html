@@ -1,0 +1,115 @@
+{% set reservation = flights.reservation %}
+
+{% if reservation %}
+    {% set current_price = reservation.outbound.current.price|float + reservation.inbound.current.price|float %}
+{% endif %}
+
+{% macro build_table(items, i) %}
+    {% set flight_date = items.0.details[i].segment.0.departure.datetime.strftime('%A, %B %d') %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>{{ flight_date }}</h3>
+        </div>
+        <div class="panel-body table-responsive">
+            <table class="table table-striped table-hover table-selection sortable by-price">
+                <thead>
+                    <tr>
+                        <th class="hidden">Date</th>
+                        <th data-defaultsort="disabled">From</th>
+                        <th>Depart</th>
+                        <th data-defaultsort="disabled">To</th>
+                        <th>Arrive</th>
+                        <th data-defaultsort="asc">Duration</th>
+                        <th># Stops</th>
+                        <th>Stops</th>
+                        <th data-defaultsort="disabled">Flight #</th>                                                                 
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                        {% set flight = item.details[i] %}
+                        {% set first_segment = flight.segment|first %}
+                        {% set last_segment  = flight.segment|last %}
+                        <tr data-identifier="{{ flight.identifier }}" data-expires="{{ flight.expires }}" data-data='{{ flight.encrypted }}'{% if flight.duplicate %}class="hidden"{% endif %}>
+                            <td class="hidden">{{ first_segment.departure.datetime.strftime('%a, %b %d') }}</td>
+                            <td class="airport-code">{{ flight.orig }}</td>
+                            <td data-dateformat="h:mm A">{{ first_segment.departure.datetime.strftime('%I:%M %p').lstrip('0') }}</td>
+                            <td class="airport-code">{{ flight.dest }}</td>
+                            <td data-dateformat="h:mm A">{{ last_segment.arrival.datetime.strftime('%I:%M %p').lstrip('0') }}</td>
+                            <td data-value="{{ flight.duration|duration }}">{{ flight.duration }}</td>
+                            <td data-value="{{ flight.no_stops }}">{{ flight.no_stops|no_stops }}</td>
+                            <td class="airport-code">{{ flight.stops|join(', ') }}</td>
+                            <td>{{ flight.flight_no|join(', ') }}</td>           
+                        </tr>
+                    {% endfor %}
+                </tbody>          
+            </table>
+        </div>
+    </div>
+{% endmacro %}
+
+
+<article id="results" class="container top-buffer" data-paid="{{ reservation.paid }}" data-name="{{ reservation.name }}" data-code="{{ reservation.code }}" >
+    <div class="text-center center-block loading-spinner {% if not reservation %}hidden{% endif %}">
+        <i class="fa fa-spinner fa-spin text-muted" style="font-size:76px"></i>
+    </div>
+    <section class="{% if reservation %}invisible{% endif %}">
+        {% if flights is defined %}
+            {% if flights %}
+                {# tabs #}
+                <ul class="nav nav-pills nav-justified top-buffer">
+                    {% for i in range(flights.by_price.0.details|length) %}
+                        <li class="{% if loop.first %}active{% endif %}"><a href="#results_{{ i }}" data-toggle="tab">
+                            Select Flight {{ (i+1)|apnumber|title }}<i class="glyphicon glyphicon-ok-circle left-buffer hidden"></i>
+                        </a></li>
+                        <li class="text-center text-muted hidden-xs">
+                            <i class="glyphicon glyphicon-arrow-right"></i>
+                        </li>
+                    {% endfor %}                    
+                    <li class="disabled" data-toggle="tooltip" data-placement="top" title="">
+                        <a href="#itinerary" data-toggle="tab">Get Alerts</a>
+                    </li>
+                </ul>                
+                {# tab content #}
+                <div class="tab-content">
+                    {% for i in range(flights.by_price.0.details|length) %}
+                        <div id="results_{{i}}" class="tab-pane fade in {% if i == 0 %}active{% endif %}" data-number="{{i}}">{{ build_table(flights.by_price, i) }}</div>
+                    {% endfor %}
+                    <div class="tab-pane fade" id="itinerary">
+                        <div class="panel panel-default" >
+                            <div class="panel-heading text-center">
+                                <h3>
+                                    $<span class="total-price" data-toggle="tooltip" title="This is the current price for this itinerary."></span>
+                                </h3>
+                            </div>
+                            <div class="panel-body table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead></thead>
+                                    <tbody></tbody>          
+                                </table>
+                            </div>
+                            <div class="panel-footer text-center">
+                                {% if reservation %}
+                                    {% set paid_more = reservation.paid|int > current_price %}
+                                    <span class="">
+                                        <small class="text-{{ 'danger' if paid_more else 'success' }}">
+                                            {{ 'Uh oh' if paid_more else 'Congrats' }}, you paid <b>${{ reservation.paid }}</b>, which is
+                                            ${{ '%0.2f' % (reservation.paid|float - current_price|float)|abs }}
+                                            {{ 'more' if paid_more else 'less' }} than the current price.
+                                        </small>
+                                    </span>
+                                {% endif %}
+                            </div>                               
+                        </div>
+                        <div class="">                                      
+                            <button class="btn btn-success watch-fare btn-block" data-loading-text="Submitting...">Watch fare</button>            
+                        </div>                         
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-danger">No flights found.</div>
+            {% endif %}
+        {% endif %}
+    </section>
+</article>
+

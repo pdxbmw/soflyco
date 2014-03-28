@@ -1,0 +1,33 @@
+<div class="airports-wrapper form-group">
+    <label class="sr-only" for="DepartureCity1">From</label>
+    <div class="input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-plane fa-rotate-90"></span></span>
+        <input class="airports form-control" name="DepartureCity1" placeholder="Origin" type="text" autocomplete="off" required value="{{ session.search.DepartureCity1|first }}">
+    </div>
+    <div class="airports-results"></div>
+</div>
+
+<div class="airports-wrapper form-group dropdown">
+    <label class="sr-only" for="ArrivalCity1">To</label>
+    <div class="input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-plane fa-rotate-270"></span></span>                            
+        <input class="airports form-control" name="ArrivalCity1" placeholder="Destination" autocomplete="off" required value="{{ session.search.ArrivalCity1|first }}">
+    </div>
+    <div class="airports-results dropdown-menu"></div>            
+</div>                         
+
+<div class="form-group">     
+    <label class="sr-only" for="DepartureDate1">Depart Date</label>                              
+    <div class="input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+        <input type="text" class="form-control" name="DepartureDate1" data-date-format="mm/dd/yyyy" placeholder="Depart date" autocomplete="off" required value="{{ session.search.DepartureDate1|first }}">
+    </div>
+</div>
+
+<div class="form-group">     
+    <label class="sr-only" for="ReturnDate">Return date</label>
+    <div class="input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+        <input type="text" class="form-control form-inline" name="ReturnDate" data-date-format="mm/dd/yyyy" placeholder="Return date" autocomplete="off"  required value="{{ session.search.ReturnDate|first }}">
+    </div>    
+</div>   

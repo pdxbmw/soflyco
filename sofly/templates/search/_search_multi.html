@@ -1,0 +1,35 @@
+{% macro multi_city(i) %}
+    {% set n = i-1%}
+    <div class="row bottom-buffer">
+        <div class="col-sm-1">
+            <label>{{ i|multi_label }}</label>
+        </div>
+        <div class="col-sm-4 airports-wrapper">
+            <label class="sr-only" for="DepartureCity{{ i }}">From</label>
+            <div class="input-group">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-plane"></span></span>
+                <input class="airports form-control {% if i<3 %}required{% endif %}" name="DepartureCity{{ i }}" placeholder="Origin" type="text" autocomplete="off" tabindex="{{ 3*n+1 }}" value="">
+            </div>
+            <div class="airports-results"></div>
+        </div>
+        <div class="col-sm-4 airports-wrapper">
+            <label class="sr-only" for="ArrivalCity{{ i }}">To</label>
+            <div class="input-group">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-plane fa-rotate-180"></span></span>                            
+                <input class="airports form-control {% if i<3 %}required{% endif %}" name="ArrivalCity{{ i }}" placeholder="Destination" autocomplete="off" tabindex="{{ 3*n+2 }}" value="">
+            </div> 
+            <div class="airports-results dropdown-menu"></div>      
+        </div>
+        <div class="col-sm-3">
+            <label class="sr-only" for="DepartureDate{{ i }}">Departure date</label>
+            <div class="input-group">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            <input type="text" class="form-control form-inline {% if i<3 %}required{% endif %}" name="DepartureDate{{ i }}" data-date-format="mm/dd/yyyy" placeholder="Departure date" autocomplete="off" tabindex="{{ 3*n+3 }}" value="">
+            </div>   
+        </div>
+    </div>  
+{% endmacro %}
+
+{% for i in range(4) %}
+    {{ multi_city(loop.index) }}
+{% endfor %}

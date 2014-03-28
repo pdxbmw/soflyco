@@ -1,0 +1,99 @@
+{% set itineraries = results.itineraries %}
+{% set reservation = results.reservation %}
+
+{# TODO #}
+{% if reservation %}
+    {% set current_price = reservation.current_price|float %}
+    {% set paid = reservation.paid|float + reservation.discount|float %}
+    {% set miles = reservation.miles %}
+    {% set paid_more = paid > current_price %}
+{% endif %}
+
+<article id="results" class="top-buffer" data-search="{{ results.search_params_encoded }}" {% if reservation %}data-paid="{{ reservation.paid|float + reservation.discount }}" data-name="{{ reservation.last_name }}" data-code="{{ reservation.ticket_code }}"{% endif %}>
+    <div class="text-center center-block loading-spinner {% if not reservation %}hidden{% endif %}">
+        <i class="fa fa-spinner fa-spin text-muted" style="font-size:76px"></i>
+    </div>
+    <section class="{% if reservation %}invisible{% endif %}">
+        {% if itineraries %}
+            {# tabs #}
+            <ul class="nav nav-pills nav-justified top-buffer nav-results-{{ results.num_flights }}">
+                {% for itinerary in results.itineraries %}
+                    <li class="{% if loop.first %}active{% endif %}">
+                        <a href="#results_{{ loop.index0 }}" data-toggle="tab">
+                            {{ itinerary.origin }}
+                            <i class="fa fa-angle-double-right"></i>
+                            {{ itinerary.destination }}
+                            <i class="glyphicon glyphicon-ok-circle invisible"></i>
+                        </a>
+                    </li>
+                    <li class="text-center text-muted hidden-xs">
+                        <i class="glyphicon glyphicon-arrow-right"></i>
+                    </li>
+                {% endfor %}                    
+                <li class="disabled" data-toggle="tooltip" data-placement="top" title="">
+                    <a href="#itinerary" data-toggle="tab">Get Alerts</a>
+                </li>
+            </ul>                
+            {# tab content #}
+            <div class="tab-content">
+                {% for itinerary in results.itineraries %}
+                {% set i = loop.index0 %}
+                    <div id="results_{{ i }}" class="tab-pane fade in {% if loop.first %}active{% endif %}" data-number="{{ i }}">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3>{{ itinerary.flights[i].depart.strftime('%A, %B %d') }}</h3>
+                            </div>
+                            <div class="panel-body table-responsive">
+                                <table class="table table-striped table-hover table-selection sortable {% if results.is_by_price %}by-price{% else %}by-schedule{% endif %}">
+                                    {% include 'results/_thead.html' %}
+                                    {% include 'results/_tbody.html' %}       
+                                </table>
+                            </div>
+                        </div>                        
+                    </div>
+                {% endfor %}
+                <div class="tab-pane fade" id="itinerary">
+                    <div class="panel panel-default" >
+                        <div class="panel-heading text-center">
+                            <h3>
+                                $<span class="total-price" data-toggle="tooltip" title="This is the current price for this itinerary."></span>
+                            </h3>
+                        </div>
+                        <div class="panel-body table-responsive">
+                            <table class="table table-striped table-hover">
+                                {% include 'results/_thead.html' %}
+                                <tbody></tbody>          
+                            </table>
+                        </div>
+                        <div class="panel-footer text-center">
+                            {% if reservation %}
+                                <span class="">
+                                    {% if miles %}
+                                        <small class="text-warning">
+                                            You used miles for this reservation, which doesn't qualify for the low price guarantee.
+                                        </small>
+                                    {% else %}
+                                        <small class="text-{{ 'danger' if paid_more else 'success' }}">
+                                            {{ 'Uh oh' if paid_more else 'Congrats' }}, you paid <b>${{ '%0.2f' % paid }}</b>
+                                            {% if reservation.discount %}(${{ reservation.discount|int }} discount added){% endif %}
+                                            , which is ${{ '%0.2f' % (paid - current_price)|abs }}
+                                            {{ 'more' if paid_more else 'less' }} than the current price.
+                                        </small>
+                                    {% endif %}
+                                </span>
+                            {% endif %}
+                        </div>                               
+                    </div>
+                    {% if not miles %}
+                    <div class="text-right">
+                        <button class="btn btn-success watch-fare btn-lg" data-loading-text="Submitting...">Click to watch fare</button>            
+                    </div>          
+                    {% endif %}               
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-danger">No flights found.</div>
+        {% endif %}
+    </section>
+</article>
+

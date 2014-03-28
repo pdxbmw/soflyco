@@ -1,0 +1,20 @@
+<tbody>                    
+    {% for flight in itinerary.flights %}
+    {% if not flight.duplicate %}
+        <tr data-identifier="{{ flight.identifier }}" data-price="{{ flight.price }}">
+            <td class="hidden">{{ flight.depart.strftime('%a, %b %d') }}</td>
+            <td>{{ flight.origin|airport_code }}</td>
+            <td data-dateformat="h:mm A">{{ flight.depart.strftime('%I:%M %p').lstrip('0') }}</td>
+            <td>{{ flight.destination|airport_code }}</td>
+            <td data-dateformat="h:mm A">{{ flight.arrive.strftime('%I:%M %p').lstrip('0') }}</td>
+            <td data-value="{{ flight.duration }}">{{ flight.duration|duration }}</td>
+            <td data-value="{{ flight.stops }}">{{ flight.stops|no_stops }}</td>
+            <td>{{ flight.connections|airport_code|safe }}</td>
+            <td class="hide-in-summary" >{{ flight.numbers|join(', ') }}</td> 
+            {% if results and not results.is_by_price %}  
+                <td>{{ flight.price }}</td>
+            {% endif %}
+        </tr> 
+    {% endif %}
+    {% endfor %} 
+</tbody>   

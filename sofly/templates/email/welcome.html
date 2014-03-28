@@ -1,0 +1,30 @@
+{% extends 'email/base.html' %}
+
+{% block extra_styles %}
+    <style>
+            
+    </style>
+{% endblock extra_styles %}
+
+{% block header %}
+    Welcome to SoFly!
+{% endblock header %}
+
+{% block sub_header %}
+    {{ tagline() }}
+{% endblock sub_header %}
+
+{% block content %}
+    <div class="text-center" style="padding-top:20px; max-width: 400px;">
+        <p class="text-muted" style="padding-top:10px;">Please verify your email address so we can send you fare alerts.</p>
+    </div>
+{% endblock content %}
+
+{% block footer %}
+    <a class="btn btn-success btn-lg" href="{{ activate_url }}">
+        Click here to verify
+    </a>
+    <div style="padding-top:20px">
+        <small class="text-muted"></small>
+    </div>
+{% endblock footer %}
