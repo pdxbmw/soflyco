@@ -1,35 +1,38 @@
 from flask import Flask
 from flask.ext.mongoengine import MongoEngine
 
-app = Flask(__name__)
-
-app.config.from_object('config')
-app.debug = app.config['IS_DEV']
-
 from sofly.apps.common.session import MongoSessionInterface
 from sofly.utils.security import SecurityUtils
 
-app.session_interface = MongoSessionInterface()
 
-db = MongoEngine(app)
+db = MongoEngine()
 log = app.logger
 security = SecurityUtils()
-
-from sofly.utils.mail import MailUtils
 mail = MailUtils()
 
-from sofly.apps.results.views import module as results_module
-from sofly.apps.search.views import module as search_module
-from sofly.apps.users.views import module as users_module
 
-app.register_blueprint(results_module)
-app.register_blueprint(search_module)
-app.register_blueprint(users_module)
+def create_app(config_name):
+    app = Flask(__name__)
+    app.config.from_object(config[config_name])
 
-import sofly.apps.common.filters
-import sofly.apps.common.session
-import sofly.views
+    app.session_interface = MongoSessionInterface()
 
+    db.init_app(app)
+
+    from sofly.apps.results.views import module as results_module
+    app.register_blueprint(results_module)
+
+    from sofly.apps.search.views import module as search_module
+    app.register_blueprint(search_module)
+    
+    from sofly.apps.users.views import module as users_module
+    app.register_blueprint(users_module)    
+
+    #import sofly.apps.common.filters
+    #import sofly.apps.common.session
+    #import sofly.views    
+
+    return app
 
 #from sofly import config
 #from flask_debugtoolbar import DebugToolbarExtension
