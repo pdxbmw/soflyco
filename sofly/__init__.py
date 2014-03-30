@@ -1,4 +1,5 @@
 from flask.ext.mongoengine import MongoEngine
+from werkzeug.contrib.fixers import ProxyFix
 
 from sofly.helpers import Flask
 from sofly.middleware import MethodRewriteMiddleware
@@ -19,7 +20,8 @@ security = SecurityUtils()
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
-    app.wsgi_app = MethodRewriteMiddleware(app.wsgi_app)    
+    #app.wsgi_app = MethodRewriteMiddleware(app.wsgi_app)
+    app.wsgi_app = ProxyFix(app.wsgi_app)    
 
     syslog_handler = SysLogHandler()
     syslog_handler.setLevel(logging.DEBUG)
@@ -27,7 +29,7 @@ def create_app(config_name):
     app.logger.addHandler(syslog_handler)
 
     # production
-    sys.path.insert(0,"/var/www/sofly/")
+    #sys.path.insert(0,"/var/www/sofly/")
     
     app.session_interface = MongoSessionInterface(app.config['MONGODB_SETTINGS'])
     
