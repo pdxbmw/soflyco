@@ -1,10 +1,12 @@
-from sofly import app, security
-from sofly.apps.common.data import airports as AIRPORTS
+from flask import abort, current_app
+
+from sofly.data import airports as AIRPORTS
 from sofly.apps.common.helpers import FlashMessage, InvalidUsage
 from sofly.utils.cache import CacheUtils
+from sofly.utils.security import SecurityUtils
+
 from collections import namedtuple, OrderedDict
 from copy import deepcopy
-from flask import abort
 from pyquery import PyQuery as pq
 import calendar
 import datetime
@@ -15,10 +17,8 @@ import pytz
 import re
 import requests
 
-log = app.logger
-
 cacheUtils = CacheUtils()
-#security = SecurityUtils()
+security = SecurityUtils()
 
 Links = namedtuple('Links', 'get_discount_code, lookup_airport, lookup_reservation, search_by_price, search_by_schedule')
 
@@ -28,8 +28,6 @@ URLS = Links('https://www.alaskaair.com/shared/tips/AboutDiscountCodes.aspx?view
         'https://www.alaskaair.com/Shopping/Flights/Price',
         'https://www.alaskaair.com/Shopping/Flights/Shop'
 )
-
-#airports = airports()
 
 class Segment(object):
     """
@@ -162,7 +160,7 @@ class Itinerary(object):
         return self.flights[-1]
 
     def from_identifier(self, identifiers):
-        log.debug(identifiers)
+        current_app.logger.debug(identifiers)
 
         def get_connections(text):
             return re.findall("([A-Z]{3})", text)
@@ -304,7 +302,7 @@ class Reservation(Itinerary):
                 response = requests.get(URLS.get_discount_code + match.group(1))
                 self.discount = float(response.content.split('$')[1].split()[0])
         except Exception as e:
-            log.error(e)
+            current_app.logger.error(e)
 
     def check_for_schedule_change(self):
         if 'Confirm Your Schedule Change' in self.html:
@@ -341,17 +339,17 @@ class Reservation(Itinerary):
             if not cached:
                 response = requests.post(URLS.lookup_reservation, data=values)
                 content = response.content
-                log.debug("Caching Alaska reservation search.")
+                current_app.logger.debug("Caching Alaska reservation search.")
             else:
                 content = cached
-                log.debug("Found Alaska reservation in cache.")
+                current_app.logger.debug("Found Alaska reservation in cache.")
         
             cacheUtils.set(self.cache_key, content, timeout=3600)
 
             return content
             
         except Exception as e:            
-            log.error(e)
+            current_app.logger.error(e)
             self.abort()
 
     def parse(self, content):
@@ -409,12 +407,12 @@ class Reservation(Itinerary):
             if attribute:
                 match = re.search('^.*DateRange=(.*?)&.*$', attribute).group(1)
             else:
-                log.debug("Couldn't find date range in hotel link. Trying car link.")
+                current_app.logger.debug("Couldn't find date range in hotel link. Trying car link.")
                 attribute = self.html('.head.car a').attr('onclick')
                 match = re.search('.*DateTimeRange=(.*?)&.*', attribute).group(1)
             self.travel_dates = [date[:10] for date in match.split('%2C')]
         except TypeError as e:
-            log.error(("Problem with request. Removing from cache and retrying.",e))
+            current_app.logger.error(("Problem with request. Removing from cache and retrying.",e))
             cacheUtils.delete(self.cache_key)
             if self.submit_attempts > 3:
                 self.abort()
@@ -538,7 +536,7 @@ class Search(object):
                 together and listed by total price.
 
             """
-            log.debug("Coudn't find the schedule table. Looking in price table.")
+            current_app.logger.debug("Coudn't find the schedule table. Looking in price table.")
 
             rows = pq(table).find('.Option')
 
@@ -644,7 +642,7 @@ class Search(object):
             self.cabin = self.search_params['CabinType'].lower()
             self.build_airport_list()
 
-            log.debug(self.search_params)
+            current_app.logger.debug(self.search_params)
 
             self.cache_key = ''.join([value for key, value in self.search_params.items()])
             cached = cacheUtils.get(self.cache_key)
@@ -652,17 +650,17 @@ class Search(object):
             if not cached:
                 response = requests.post(URLS.search_by_schedule, data=self.search_params)
                 content = response.content
-                log.debug("Caching Alaska search.")
+                current_app.logger.debug("Caching Alaska search.")
             else:
                 content = cached
-                log.debug("Found Alaska search in cache.")
+                current_app.logger.debug("Found Alaska search in cache.")
 
             cacheUtils.set(self.cache_key, content, timeout=3600)                       
 
             return content
 
         except Exception as e:
-            log.error(e)
+            current_app.logger.error(e)
             self.abort()
 
     def get_flights_by_identifier(self, identifier):
@@ -703,8 +701,8 @@ class Search(object):
             print params
             return {key: params[key] for key in params if key in allowed_params}
         except Exception as e:
-            log.debug("No search params sent with request.")
-            log.error(e)
+            current_app.logger.debug("No search params sent with request.")
+            current_app.logger.error(e)
             self.abort()            
 
     def parse(self, content):

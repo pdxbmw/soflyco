@@ -5,11 +5,17 @@ import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+
 class Config:
     ADMINS = frozenset(['admin@sofly.co'])
+    DEFAULTS = {}
 
     APP_SECRET = '6qa!&S2YG^@@H7VfVayg5Hp&ZHrS2UGxfkRSbJb*%Zy!nNKqrtyfFckM2CWJWnep'
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'fwks!!4JZ5h!sxw&rv@3QdprsVh$pV2uX#Rzwx&eBW&XU9xz@9!ANQ@4ZfSxR8'
+
+    CACHE_USERNAME = 'memcached-flights-pdxbmw'
+    CACHE_PASSWORD = 'Ct3NYpnCDHqohseV'
+    CACHE_URL      = 'pub-memcache-17464.us-east-1-4.1.ec2.garantiadata.com:17464'
 
     CSRF_ENABLED = True
     CSRF_SESSION_KEY = 'q%DC3uGPn5RsYHekDVs2d9Yv^#q#5j$HwjXK6nc#2qErD5rft3ADcHCuv7T&J7WD'
@@ -31,46 +37,60 @@ class Config:
         }
     }
 
-
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME') or 'admin@sofly.co'
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD') or 'dGMPyJ2a7%HszA^ga6@D'
+    MAIL_HOST = 'smtp.zoho.com:465'
+    
+    # FOR LATER 
+    """
+    MAIL_SERVER = 'smtp.googlemail.com'
+    MAIL_PORT = 587
+    MAIL_USE_TLS = True
+    MAIL_DEFAULT_SENDER = os.environ.get('MAIL_SENDER') or 'nobody@example.com'
+    MAIL_FLUSH_INTERVAL = 3600 # one hour
+    MAIL_ERROR_RECIPIENT = os.environ.get('MAIL_ERROR_RECIPIENT')    
+    """
+    
     RECAPTCHA_USE_SSL = False
     RECAPTCHA_PUBLIC_KEY = '6LdvVvASAAAAAKdWAk9sKZBGIbLqLM1HpsTVGtfw'
     RECAPTCHA_PRIVATE_KEY = '6LdvVvASAAAAADuuvsxXEjTkaW3zYUmie9qoPHoF'
     RECAPTCHA_OPTIONS = {'theme': 'clean'}
 
+    #config = copy.deepcopy(Config.OAUTH2)
+    #config['__defaults__'] = Config.DEFAULTS    
+
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    IS_DEV = True
     SECRET_KEY = os.environ.get('SECRET_KEY') or 't0p s3cr3t'
     MONGODB_SETTINGS = {
-        'DB'       : 'sofly'
+        'DB'       : 'sofly',
         'HOST'     : 'localhost',
         'PORT'     : 27017
     }    
 
 
 class TestingConfig(Config):
+    DEBUG = False
     TESTING = True
     SECRET_KEY = 'secret'
 
 
 class ProductionConfig(Config):
+    DEBUG = False
     MONGODB_SETTINGS = {
         #'USERNAME' : os.environ.get('MONGODB_USERNAME', ''),
         #'PASSWORD' : os.environ.get('MONGODB_PASSWORD', ''),
         'DB'       : os.environ.get('MONGODB_DATABASE'),    
         'HOST'     : os.environ.get('MONGODB_HOST'),
-        'PORT'     : int(os.environ.get('MONGODB_PORT'))
+        'PORT'     : int(os.environ.get('MONGODB_PORT', 27017))
     }
-
-config = copy.deepcopy(OAUTH2)
-config['__defaults__'] = DEFAULTS
 
 config = {
     'development': DevelopmentConfig,
-    'testing': TestingConfig,
-    'production': ProductionConfig,
-    'default': DevelopmentConfig
+    'testing'    : TestingConfig,
+    'production' : ProductionConfig,
+    'default'    : DevelopmentConfig
 }
 
 '''

@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 from pymongo import MongoClient, Connection
 from uuid import uuid4
 from werkzeug.datastructures import CallbackDict
-#import config 
 import os 
 
 
@@ -17,6 +16,14 @@ import os
 """
 
 
+def _mongo_uri(settings):
+    uri = 'mongodb://'
+    if settings.get('USERNAME'):
+        uri += '%s:%s@' % (settings['USERNAME'], settings['PASSWORD'])
+    uri += '%s:%d/%s' % (settings['HOST'], settings['PORT'], settings['DB'])     
+    return uri         
+
+
 class MongoSession(CallbackDict, SessionMixin):
 
     def __init__(self, initial=None, sid=None):
@@ -26,23 +33,11 @@ class MongoSession(CallbackDict, SessionMixin):
 
 class MongoSessionInterface(SessionInterface):
 
-    def __init__(self, host='localhost', port=27017, db='sofly', collection='sessions'):    
-        if config.IS_DEV:
-            uri = "mongodb://%s:%d/%s" % (host, port, db)   
-        else:
-            MONGO = config.MONGO
-            uri = os.environ.get('MONGOHQ_URL')
-            if not uri:
-                uri = "mongodb://%s:%s@%s:%d/%s" % (
-                    config.MONGO['username'],
-                    config.MONGO['password'],
-                    config.MONGO['hostname'],
-                    config.MONGO['port'],
-                    config.MONGO['db']
-                )                        
+    def __init__(self, settings, collection='sessions'):    
+        uri = _mongo_uri(settings)
         client = MongoClient(uri)
-        self.store = client[db][collection]
-
+        self.store = client[settings['DB']][collection]
+        
     def open_session(self, app, request):
         sid = request.cookies.get(app.session_cookie_name)
         if sid:

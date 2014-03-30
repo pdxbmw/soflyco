@@ -1,12 +1,9 @@
-from sofly import app, security
-#from sofly.utils.security import SecurityUtils
+from sofly import app
 from flask import Markup
 import humanize
 import json
 
 log = app.logger
-
-#security = SecurityUtils()
 
 @app.template_global('tagline')
 def tagline():
@@ -39,11 +36,6 @@ def duration(arg):
     except Exception as e:
         log.error(e)
     return out
-    
-
-@app.template_filter('encrypt')
-def encrypt(arg):
-    return json.dumps(security.encrypt(arg))
 
 @app.template_filter('multi_label')
 def multi_label(arg):

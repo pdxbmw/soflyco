@@ -1,6 +1,8 @@
 from flask import request, url_for
 
-from sofly import app, log, security
+from sofly.utils.security import SecurityUtils
+
+security = SecurityUtils()
 
 def _get_link(route, payload):
     ctx = app.test_request_context()
@@ -21,7 +23,6 @@ def get_claim_link(identifier, email, price):
 
 def redirect_url(default='index'):
     print 'redirecting'
-    log.debug((request.args.get('next'), request.referrer, url_for(default)))
     return request.args.get('next') or \
            request.referrer or \
            url_for(default)

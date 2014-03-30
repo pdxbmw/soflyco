@@ -2,37 +2,43 @@ from flask import Flask
 from flask.ext.mongoengine import MongoEngine
 
 from sofly.apps.common.session import MongoSessionInterface
+from sofly.utils.mail import MailUtils
 from sofly.utils.security import SecurityUtils
 
+from config import config
+
+import logging
+import sys
+
+from logging.handlers import SysLogHandler
 
 db = MongoEngine()
-log = app.logger
-security = SecurityUtils()
 mail = MailUtils()
-
+security = SecurityUtils()
 
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
 
-    app.session_interface = MongoSessionInterface()
+    syslog_handler = SysLogHandler()
+    syslog_handler.setLevel(logging.DEBUG)
+    logging.basicConfig(stream=sys.stderr)
+    app.logger.addHandler(syslog_handler)
 
-    db.init_app(app)
-
-    from sofly.apps.results.views import module as results_module
-    app.register_blueprint(results_module)
-
-    from sofly.apps.search.views import module as search_module
-    app.register_blueprint(search_module)
+    # production
+    sys.path.insert(0,"/var/www/sofly/")
     
-    from sofly.apps.users.views import module as users_module
-    app.register_blueprint(users_module)    
-
-    #import sofly.apps.common.filters
-    #import sofly.apps.common.session
-    #import sofly.views    
+    app.session_interface = MongoSessionInterface(app.config['MONGODB_SETTINGS'])
+    
+    db.init_app(app)
+    mail.init_app(app)
+    security.init_app(app)
 
     return app
+
+#import sofly.apps.common.filters
+#import sofly.apps.common.session
+#import sofly.views    
 
 #from sofly import config
 #from flask_debugtoolbar import DebugToolbarExtension

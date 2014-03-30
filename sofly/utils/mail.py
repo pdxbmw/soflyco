@@ -4,20 +4,20 @@ from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 from jinja2 import Environment, FileSystemLoader
 
-from sofly import app, security
-from sofly.apps.common import filters, helpers
-
 import os
 import premailer
 import smtplib
 
 class MailUtils(object):
-    USERNAME = 'admin@sofly.co'
-    PASSWORD = 'dGMPyJ2a7%HszA^ga6@D'
-    HOST = 'smtp.zoho.com:465'
 
-    def __init__(self):
-        pass  
+    def __init__(self, app=None):
+        if app is not None:
+            self.init_app(app)
+
+    def init_app(self, app):
+        self.HOST = app.config['MAIL_HOST']
+        self.USER = app.config['MAIL_USERNAME'] 
+        self.PASS = app.config['MAIL_PASSWORD']
 
     def create_email_MIME(self, from_email, to_email, subject, body):
         msg = MIMEMultipart()
@@ -39,9 +39,8 @@ class MailUtils(object):
         return self.render_template('email/watching.html', context)
 
     def render_template(self, tmpl, template_values):
-        template_dir = os.path.join(app.root_path, app.template_folder)
-        
-        env = Environment(loader=FileSystemLoader(template_dir))
+        from sofly.apps.common import filters
+        env = Environment(loader=FileSystemLoader(self.template_dir))
         env.filters['duration'] = filters.duration
         env.filters['no_stops'] = filters.no_stops
         env.globals['tagline'] = filters.tagline
@@ -55,6 +54,7 @@ class MailUtils(object):
                 ).transform()   
 
     def send_activation_email(self, user=None, **kwargs):
+        from sofly.apps.common import helpers
         user = user or g.user
         url = helpers.get_activation_link(user.id) 
         html = self.render_template('email/welcome.html', dict(activate_url=url))
@@ -66,7 +66,7 @@ class MailUtils(object):
         text = self.create_email_MIME(from_email, to_email, subject, body)
         server = smtplib.SMTP_SSL(self.HOST, timeout=10)
         server.ehlo()
-        server.login(self.USERNAME, self.PASSWORD)
+        server.login(self.USER, self.PASS)
         server.sendmail(from_email, to_email, text)
         server.quit() 
 

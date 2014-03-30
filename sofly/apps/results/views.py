@@ -1,6 +1,7 @@
-from flask import Blueprint, flash, g, jsonify, make_response, redirect, render_template, request, session, url_for
+from flask import Blueprint, flash, g, jsonify, make_response, \
+    redirect, render_template, request, session, url_for
 
-from sofly import log, mail, security
+from sofly import mail, security
 from sofly.apps.common.decorators import *
 from sofly.apps.results.models import Price, Watch, Watcher
 from sofly.utils.alaska import AlaskaUtils

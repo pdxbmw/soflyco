@@ -1,4 +1,3 @@
-from sofly import app
 from Crypto.Cipher import AES
 from werkzeug.contrib.cache import MemcachedCache
 import bmemcached
@@ -11,6 +10,9 @@ class CacheUtils(object):
     URL      = 'pub-memcache-17464.us-east-1-4.1.ec2.garantiadata.com:17464'
 
     def __init__(self):
+        self.cache = MemcachedCache(['127.0.0.1:11211'])
+
+        '''
         self.IS_DEV = app.config.get('IS_DEV')
         if self.IS_DEV:
             self.cache = MemcachedCache(['127.0.0.1:11211'])
@@ -20,6 +22,7 @@ class CacheUtils(object):
                     os.environ.get('MEMCACHEDCLOUD_USERNAME') or self.USERNAME, 
                     os.environ.get('MEMCACHEDCLOUD_PASSWORD') or self.PASSWORD    
             )
+        '''
     
     def delete(self, key):
         cache_key = hashlib.sha1(key).hexdigest()

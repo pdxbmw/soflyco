@@ -1,6 +1,8 @@
-from Crypto.Cipher import AES
 from flask import url_for
+
+from Crypto.Cipher import AES
 from itsdangerous import URLSafeSerializer
+
 import base64
 import config
 import hashlib
@@ -16,7 +18,12 @@ class SecurityUtils(object):
 
     """
     
-    MASTER_KEY = config.SECRET_KEY
+    def __init__(self, app=None):
+        if app is not None:
+            self.init_app(app)
+
+    def init_app(self, app):
+        self.MASTER_KEY = app.config.get('SECRET_KEY')
 
     def decrypt(self, cipher_text):
         dec_secret = AES.new(self.MASTER_KEY[:32])

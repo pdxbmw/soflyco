@@ -4,40 +4,44 @@ from bson.objectid import ObjectId
 from datetime import datetime
 from pymongo import Connection
 
-from sofly import app, security
-
 import calendar
 import config
 import os
 
-log = app.logger
-
-#security = SecurityUtils()
-
 class MongoUtils(object):
+    """
+    This whole thing needs to be revised.
+    """
 
-    def __init__(self, **kwargs):
+    def __init__(self, app=None, **kwargs):
         self.uri = self.uri()
-        self.conn = Connection(self.uri)
+        self.conn = Connection(self.uri)        
+
+        if app is not None:
+            self.init_app(app)
+
+    def init_app(self, app):
+        self.log = app.logger
+        self.app = app    
 
     def activate_user(self, user_id):
         try:                
-            log.debug('user_id is: '+user_id)
+            self.log.debug('user_id is: '+user_id)
             _id = ObjectId(user_id)
             coll = self.collection('users')
             user = coll.find_one({'_id':_id})
             if user:
-                log.debug('user found')
+                self.log.debug('user found')
                 if session:
                     session['user']['verified'] = True
                 user['verified'] = True
                 coll.update({'_id':_id}, user, upsert=True)   
-                log.debug('user activated')
+                self.log.debug('user activated')
                 return True
             else:
-                log.debug('no user with that id')
+                self.log.debug('no user with that id')
         except Exception as e:
-            log.error(e)     
+            self.log.error(e)     
         return False
 
     def collection(self, collection):
@@ -106,7 +110,7 @@ class MongoUtils(object):
                 coll.update({'identifier':doc['identifier']}, doc, upsert=True)        
             response = 'success'
         except Exception as e:
-            log.error(e)     
+            self.log.error(e)     
         return response 
 
     def update_user_paid(self, identifier, email, price):
@@ -122,7 +126,7 @@ class MongoUtils(object):
             #coll.update({'_id':_id}, doc, upsert=True)        
             response = 'success'
         except Exception as e:
-            log.error(e)     
+            self.log.error(e)     
         return response         
 
     def verify_user(self, user, **kwargs):
@@ -160,7 +164,7 @@ class MongoUtils(object):
                         category='danger')
                 return False
             except Exception as e:
-                log.error(e)     
+                self.log.error(e)     
         flash("There was a problem logging you in.", category='danger')        
         return False
 
@@ -168,7 +172,7 @@ class MongoUtils(object):
         try:
             coll = self.collection('watching')
             form = request.form
-            log.debug(form)
+            self.log.debug(form)
             search, email, flight_id, price = form['search'], session['user']['email'], form['id'], form['price']
             #now = calendar.timegm(datetime.utcnow().utctimetuple())
             #expires = calendar.timegm(datetime.strptime(request.form['expires'],'%Y-%m-%d').utctimetuple())
@@ -192,7 +196,7 @@ class MongoUtils(object):
                     )
                 )]
             )
-            log.debug(data)
+            self.log.debug(data)
             exists = coll.find_one({'identifier':flight_id})
             if exists:
                 # email
@@ -208,7 +212,7 @@ class MongoUtils(object):
             coll.update({'identifier':flight_id}, data, upsert=True)        
             return True
         except Exception as e:
-            log.error(e) 
+            self.log.error(e) 
             abort(400)
         return False
 
