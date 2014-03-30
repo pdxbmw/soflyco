@@ -9,9 +9,7 @@ import os
 import pkgutil
 import importlib
 
-from flask import Blueprint, request, url_for
-
-from sofly import security
+from flask import Blueprint, Config, Flask as BaseFlask, request, url_for
 
 def register_blueprints(app, package_name, package_path):
     """
@@ -40,11 +38,13 @@ def _get_link(route, payload):
     return url   
 
 def get_activation_link(_id):
+    from sofly import security
     s = security.get_serializer()
     payload = s.dumps(str(_id))
     return _get_link(route='users.activate_user', payload=payload)
 
 def get_claim_link(identifier, email, price):    
+    from sofly import security
     s = security.get_serializer()
     payload = s.dumps((identifier, email, price))
     return _get_link(route='results.claim', payload=payload)
@@ -64,6 +64,26 @@ def redirect_url(default='index'):
     return request.args.get('next') or \
            request.referrer or \
            url_for(default)
+           
+
+class Flask(BaseFlask):
+    """
+    Extended version of `Flask` that implements custom config class
+    and adds `register_middleware` method
+    """
+
+    def make_config(self, instance_relative=False):
+        root_path = self.root_path
+        if instance_relative:
+            root_path = self.instance_path
+        return Config(root_path, self.default_config)
+
+    def register_middleware(self, middleware_class):
+        """
+        Register a WSGI middleware on the application
+        :param middleware_class: A WSGI middleware implementation
+        """
+        self.wsgi_app = middleware_class(self.wsgi_app)           
 
 class FlashMessage(Exception):
     status_code = 400
