@@ -1,7 +1,6 @@
 from flask import abort, current_app
 
-from sofly.data import airports as AIRPORTS
-from sofly.apps.common.helpers import FlashMessage, InvalidUsage
+from sofly.helpers import FlashMessage, InvalidUsage, load_json_file
 from sofly.utils.cache import CacheUtils
 from sofly.utils.security import SecurityUtils
 
@@ -22,7 +21,10 @@ security = SecurityUtils()
 
 Links = namedtuple('Links', 'get_discount_code, lookup_airport, lookup_reservation, search_by_price, search_by_schedule')
 
-URLS = Links('https://www.alaskaair.com/shared/tips/AboutDiscountCodes.aspx?view=0&referrer=summary&code=',
+AIRPORTS = load_json_file('airports')
+
+URLS = Links(
+        'https://www.alaskaair.com/shared/tips/AboutDiscountCodes.aspx?view=0&referrer=summary&code=',
         'http://www.alaskaair.com/HomeWidget/GetCities?prefixText=',
         'https://www.alaskaair.com/booking/reservation-lookup',
         'https://www.alaskaair.com/Shopping/Flights/Price',

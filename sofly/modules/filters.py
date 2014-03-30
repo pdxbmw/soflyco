@@ -1,22 +1,25 @@
-from sofly import app
-from flask import Markup
+from flask import Blueprint, Markup, current_app
+
 import humanize
 import json
 
-log = app.logger
+module = Blueprint('filters', __name__)
 
-@app.template_global('tagline')
+# Globals
+@module.app_template_global('tagline')
 def tagline():
-    return Markup('The simplest way to get refunds on your \
-        <a href="http://www.alaskaair.com/content/deals/special-offers/price-guarantee.aspx">Alaska Airline</a> flights')
+    return Markup('Get the lowest price on your\
+        <a href="http://www.alaskaair.com/content/deals/special-offers\
+        /price-guarantee.aspx">Alaska Airline</a> flights')
 
-@app.template_filter('apnumber')
+# Filters
+@module.app_template_filter('apnumber')
 def apnumber(arg):
     out = humanize.apnumber(arg)
     return out
     #return 'no' if out == '0' else out
 
-@app.template_filter('airport_code')
+@module.app_template_filter('airport_code')
 def airport_code(arg):
     out = ''
     if type(arg) is not list:
@@ -27,17 +30,17 @@ def airport_code(arg):
             out += ', '
     return Markup(out)
 
-@app.template_filter('duration')
+@module.app_template_filter('duration')
 def duration(arg):
     out = arg
     hours, minutes = int(arg[0:2]), int(arg[2:4])
     try:
         out = '{:01d}h {:01d}m'.format(hours, minutes)
     except Exception as e:
-        log.error(e)
+        current_app.logger.error(e)
     return out
 
-@app.template_filter('multi_label')
+@module.app_template_filter('multi_label')
 def multi_label(arg):
     if arg == 1:
         return 'First'
@@ -48,7 +51,7 @@ def multi_label(arg):
     elif arg == 4:
         return 'Fourth'
 
-@app.template_filter('no_stops')
+@module.app_template_filter('no_stops')
 def no_stops(arg):
     arg = int(arg)
     out = 'Nonstop' if arg == 0 else '%s stop' % arg
@@ -56,7 +59,7 @@ def no_stops(arg):
         out += 's'
     return out
 
-@app.template_filter('pluralize')
+@module.app_template_filter('pluralize')
 def pluralize(arg):
     out = ''
     try:

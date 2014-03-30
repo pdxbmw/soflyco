@@ -1,15 +1,43 @@
-from flask import request, url_for
+"""
 
-from sofly.utils.security import SecurityUtils
+    Helpers module
 
-security = SecurityUtils()
+"""
+
+import json
+import os
+import pkgutil
+import importlib
+
+from flask import Blueprint, request, url_for
+
+from sofly import security
+
+def register_blueprints(app, package_name, package_path):
+    """
+    Register all Blueprint instances on the specified Flask application found
+    in all modules for the specified package.
+
+    :param app: the Flask application
+    :param package_name: the package name
+    :param package_path: the package path
+    """ 
+    rv = []
+    for _, name, _ in pkgutil.iter_modules(package_path):
+        m = importlib.import_module('%s.%s' % (package_name, name))
+        for item in dir(m):
+            item = getattr(m, item)
+            if isinstance(item, Blueprint):
+                app.register_blueprint(item)
+            rv.append(item)
+    return rv
 
 def _get_link(route, payload):
     ctx = app.test_request_context()
     ctx.push()
     url = url_for(route, payload=payload, _external=True)            
     ctx.pop()
-    return url
+    return url   
 
 def get_activation_link(_id):
     s = security.get_serializer()
@@ -20,6 +48,16 @@ def get_claim_link(identifier, email, price):
     s = security.get_serializer()
     payload = s.dumps((identifier, email, price))
     return _get_link(route='results.claim', payload=payload)
+
+def load_json_file(filename):
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    f = open(os.path.join(basedir, 'static/json/%s.json' % filename))
+    content = json.loads(f.read())
+    f.close() 
+    return content
+
+def is_ajax(request):
+    return 'XMLHttpRequest' in request.headers.get('X-Requested-With','')
 
 def redirect_url(default='index'):
     print 'redirecting'
@@ -56,4 +94,4 @@ class InvalidUsage(Exception):
     def to_dict(self):
         rv = dict(self.payload or ())
         rv['message'] = self.message
-        return rv
+        return rv    

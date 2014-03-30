@@ -1,6 +1,6 @@
 from sofly import mail, security
-from sofly.apps.results.models import Watch
-from sofly.apps.users.models import User
+from sofly.modules.results.models import Watch
+from sofly.modules.users.models import User
 from sofly.utils.alaska import AlaskaUtils
 
 from pprint import pprint

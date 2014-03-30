@@ -1,16 +1,15 @@
 from flask import Flask
 from flask.ext.mongoengine import MongoEngine
 
-from sofly.apps.common.session import MongoSessionInterface
+from sofly.session import MongoSessionInterface
 from sofly.utils.mail import MailUtils
 from sofly.utils.security import SecurityUtils
 
+from logging.handlers import SysLogHandler
 from config import config
 
 import logging
 import sys
-
-from logging.handlers import SysLogHandler
 
 db = MongoEngine()
 mail = MailUtils()
@@ -22,7 +21,7 @@ def create_app(config_name):
 
     syslog_handler = SysLogHandler()
     syslog_handler.setLevel(logging.DEBUG)
-    logging.basicConfig(stream=sys.stderr)
+    #logging.basicConfig(stream=sys.stderr)
     app.logger.addHandler(syslog_handler)
 
     # production
@@ -34,7 +33,25 @@ def create_app(config_name):
     mail.init_app(app)
     security.init_app(app)
 
+    register_blueprints(app)
+
     return app
+
+def register_blueprints(app):
+    from sofly.modules.views import module as base_module
+    from sofly.modules.errors import module as errors_module
+    from sofly.modules.filters import module as filters_module
+    from sofly.modules.results.views import module as results_module
+    from sofly.modules.search.views import module as search_module
+    from sofly.modules.users.views import module as users_module
+
+    app.register_blueprint(base_module)
+    app.register_blueprint(errors_module)
+    app.register_blueprint(filters_module)
+    app.register_blueprint(results_module)
+    app.register_blueprint(search_module)
+    app.register_blueprint(users_module)    
+    
 
 #import sofly.apps.common.filters
 #import sofly.apps.common.session

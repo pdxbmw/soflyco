@@ -2,7 +2,7 @@ from flask import Blueprint, request, render_template, flash, g, session, redire
 from flask import abort, jsonify, make_response
 
 from sofly import db
-from sofly.apps.search.forms import OneForm, MultiForm
+from sofly.modules.search.forms import OneForm, MultiForm
 from sofly.utils.alaska import AlaskaUtils
 
 import json
@@ -29,4 +29,8 @@ def airports():
 def reservation():
     if not session.get('reservation'):
         session['reservation'] = {'name':'','code':''}
-    return render_template('search/search.html', reservation=True)         
+    return render_template('search/search.html', reservation=True)      
+
+@module.route('/select')
+def select():
+    return render_template('select.html')        

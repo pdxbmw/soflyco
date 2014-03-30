@@ -39,7 +39,7 @@ class MailUtils(object):
         return self.render_template('email/watching.html', context)
 
     def render_template(self, tmpl, template_values):
-        from sofly.apps.common import filters
+        from sofly.modules import filters
         env = Environment(loader=FileSystemLoader(self.template_dir))
         env.filters['duration'] = filters.duration
         env.filters['no_stops'] = filters.no_stops
@@ -54,7 +54,7 @@ class MailUtils(object):
                 ).transform()   
 
     def send_activation_email(self, user=None, **kwargs):
-        from sofly.apps.common import helpers
+        from sofly import helpers
         user = user or g.user
         url = helpers.get_activation_link(user.id) 
         html = self.render_template('email/welcome.html', dict(activate_url=url))

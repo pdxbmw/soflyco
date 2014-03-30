@@ -1,12 +1,15 @@
 from flask import Blueprint, request, render_template, flash, g, session, redirect, url_for
 
+from authomatic import Authomatic
+from authomatic.adapters import WerkzeugAdapter
 from bson import ObjectId
+from itsdangerous import BadSignature
 from werkzeug import check_password_hash, generate_password_hash
 
 from sofly import db, mail, security
-from sofly.apps.users.forms import RegisterForm, LoginForm
-from sofly.apps.users.models import User
-from sofly.apps.users.decorators import login_required
+from sofly.modules.users.forms import RegisterForm, LoginForm
+from sofly.modules.users.models import User
+from sofly.modules.users.decorators import login_required
 
 module = Blueprint('users', __name__, url_prefix='/users')
 
@@ -69,6 +72,10 @@ def login_provider(provider=None):
     """
     Login handler, must accept both GET and POST to be able to use OpenID.
     """
+    authomatic = Authomatic(config=config.config, 
+                            secret=config.SECRET_KEY, 
+                            report_errors=True,
+                            logging_level=log.level)    
     response = make_response(redirect(redirect_url()))
     result = authomatic.login(WerkzeugAdapter(request, response), provider)
     if result:
