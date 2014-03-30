@@ -1,1 +1,1 @@
-web: gunicorn sofly:app
+web: gunicorn wsgi:app
