@@ -83,7 +83,7 @@ class ProductionConfig(Config):
         #'PASSWORD' : os.environ.get('MONGODB_PASSWORD', ''),
         'DB'       : os.environ.get('MONGODB_DATABASE'),    
         'HOST'     : os.environ.get('MONGODB_HOST'),
-        'PORT'     : int(os.environ.get('MONGODB_PORT', 27017))
+        'PORT'     : 27017#int(os.environ.get('MONGODB_PORT', 27017))
     }
 
 config = {
