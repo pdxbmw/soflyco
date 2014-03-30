@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 from sofly import create_app
 
