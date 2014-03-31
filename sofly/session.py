@@ -16,11 +16,18 @@ import os
 """
 
 
-def _mongo_uri(settings):
+def mongo_uri(app):
     uri = 'mongodb://'
-    if settings.get('USERNAME'):
-        uri += '%s:%s@' % (settings['USERNAME'], settings['PASSWORD'])
-    uri += '%s:%d/%s' % (settings['HOST'], settings['PORT'], settings['DB'])     
+    if app.config.get('MONGODB_USERNAME'):
+        uri += '%s:%s@' % (
+            app.config['MONGODB_USERNAME'], 
+            app.config['MONGODB_PASSWORD']
+            )
+    uri += '%s:%d/%s' % (
+        app.config['MONGODB_HOST'], 
+        app.config['MONGODB_PORT'], 
+        app.config['MONGODB_DB']
+        )     
     return uri         
 
 
@@ -35,7 +42,7 @@ class MongoSessionInterface(SessionInterface):
 
     def __init__(self, app=None, collection='sessions'):    
         #uri = _mongo_uri(settings)
-        uri = app.config['MONGO_URL']
+        uri = app.config.get('MONGO_URL') or mongo_uri(app)
         client = MongoClient(uri)
         self.store = client[app.config['MONGODB_DB']][collection]
         
