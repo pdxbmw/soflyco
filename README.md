@@ -52,3 +52,9 @@ git clone https://github.com/rlaneve/dokku-link.git link
 
 # do install
 dokku plugins-install
+
+# set flask config
+dokku config:set sofly FLASK_CONFIG=production
+
+# manual start with docker
+# docker run -t -i -e PORT=5000 app/sofly /bin/bash -c "/start web"
