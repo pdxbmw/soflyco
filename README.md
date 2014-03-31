@@ -11,12 +11,26 @@ sudo apt-get install -y zlib1g-dev
 
 # ssh keys
 # - https://www.digitalocean.com/community/articles/how-to-use-ssh-keys-with-digitalocean-droplets
-cat ~/.ssh/id_rsa.pub | ssh root@dev.sofly.co "cat >> ~/.ssh/authorized_keys" 
+ssh-keygen
 
-# remove root login
-ssh root@dev.sofly.co
+# Enter file in which to save the key (/home/sehrope/.ssh/id_rsa): id_rsa_digital_ocean
+mv id_rsa_digital_ocean* ~/.ssh/.
+cat ~/.ssh/id_rsa_digital_ocean.pub | ssh root@sofly.co "cat >> ~/.ssh/authorized_keys" 
+
+# tell ssh to use identify file for ssh
+sudo vi ~/.ssh/config
+# paste this in
+Host sofly.co
+  User root
+  IdentityFile ~/.ssh/id_rsa_digital_ocean
+
+# remove root login on remote host
+ssh root@sofly.co
 vi /etc/ssh/sshd_config
+# paste this in
 PermitRootLogin without-password
+
+# login and install dokku plugins
 
 # install MongoDB and Memcached plugins
 # - https://github.com/progrium/dokku/wiki/Plugins#community-plugins
