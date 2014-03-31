@@ -37,7 +37,7 @@ class MongoSessionInterface(SessionInterface):
         #uri = _mongo_uri(settings)
         uri = app.config['MONGO_URL']
         client = MongoClient(uri)
-        self.store = client[app.config['MONGO_DB']][collection]
+        self.store = client[app.config['MONGODB_DB']][collection]
         
     def open_session(self, app, request):
         sid = request.cookies.get(app.session_cookie_name)
