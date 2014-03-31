@@ -1,8 +1,9 @@
 from flask import abort, current_app
 
+from sofly import cache, security
 from sofly.helpers import FlashMessage, InvalidUsage, load_json_file
-from sofly.utils.cache import CacheUtils
-from sofly.utils.security import SecurityUtils
+#from sofly.utils.cache import CacheUtils
+#from sofly.utils.security import SecurityUtils
 
 from collections import namedtuple, OrderedDict
 from copy import deepcopy
@@ -16,8 +17,7 @@ import pytz
 import re
 import requests
 
-cacheUtils = CacheUtils()
-security = SecurityUtils()
+#security = SecurityUtils()
 
 Links = namedtuple('Links', 'get_discount_code, lookup_airport, lookup_reservation, search_by_price, search_by_schedule')
 
@@ -336,7 +336,7 @@ class Reservation(Itinerary):
             )
 
             self.cache_key = ''.join([v for k, v in values.items()])
-            cached = cacheUtils.get(self.cache_key)
+            cached = cache.get(self.cache_key)
             
             if not cached:
                 response = requests.post(URLS.lookup_reservation, data=values)
@@ -346,7 +346,7 @@ class Reservation(Itinerary):
                 content = cached
                 current_app.logger.debug("Found Alaska reservation in cache.")
         
-            cacheUtils.set(self.cache_key, content, timeout=3600)
+            cache.set(self.cache_key, content, timeout=3600)
 
             return content
             
@@ -415,7 +415,7 @@ class Reservation(Itinerary):
             self.travel_dates = [date[:10] for date in match.split('%2C')]
         except TypeError as e:
             current_app.logger.error(("Problem with request. Removing from cache and retrying.",e))
-            cacheUtils.delete(self.cache_key)
+            cache.delete(self.cache_key)
             if self.submit_attempts > 3:
                 self.abort()
             else:
@@ -647,7 +647,7 @@ class Search(object):
             current_app.logger.debug(self.search_params)
 
             self.cache_key = ''.join([value for key, value in self.search_params.items()])
-            cached = cacheUtils.get(self.cache_key)
+            cached = cache.get(self.cache_key)
 
             if not cached:
                 response = requests.post(URLS.search_by_schedule, data=self.search_params)
@@ -657,7 +657,7 @@ class Search(object):
                 content = cached
                 current_app.logger.debug("Found Alaska search in cache.")
 
-            cacheUtils.set(self.cache_key, content, timeout=3600)                       
+            cache.set(self.cache_key, content, timeout=3600)                       
 
             return content
 

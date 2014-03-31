@@ -1,33 +1,34 @@
-from flask import Blueprint, jsonify, flash, \
-    make_response, redirect, render_template
+from flask import Blueprint, current_app, jsonify, \
+    flash, make_response, redirect, render_template
     
-from sofly.helpers import FlashMessage, InvalidUsage
+from sofly.helpers import FlashMessage, InvalidUsage, \
+    redirect_url
     
 module = Blueprint('errors', __name__)
 
 @module.app_errorhandler(400)
 def failed(e, **kwargs):
-    log.error(e)
+    current_app.logger.error(e)
     return jsonify(status=kwargs.get('status','failed')), 400
 
 @module.app_errorhandler(401)
 def not_authorized(e):
-    log.error(e)
+    current_app.logger.error(e)
     return jsonify(status='logged out'), 401
 
 @module.app_errorhandler(403)
 def not_verified(e):
-    log.error(e)
+    current_app.logger.error(e)
     return jsonify(status='unverified'), 403
 
 @module.app_errorhandler(404)
 def not_found(e):
-    log.error(e)
+    current_app.logger.error(e)
     return render_template('404.html')
 
 @module.app_errorhandler(500)
 def server_error(e):
-    log.error(e)
+    current_app.logger.error(e)
     return render_template('500.html')    
 
 @module.app_errorhandler(InvalidUsage)

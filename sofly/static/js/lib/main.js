@@ -119,7 +119,7 @@ $(function() {
                 input = this.value;
             delay(function() {
                 if (request) request.abort();
-                request = $.getJSON('/airports', {q:input}, function(data) {
+                request = $.getJSON('/search/airports', {q:input}, function(data) {
                     var html = makeList(data);
                     $results.empty().html(html);
                     if ($results.find('.list-group').length && $this.is(':focus'))

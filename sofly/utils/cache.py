@@ -1,30 +1,17 @@
-from flask import current_app
-
 from Crypto.Cipher import AES
 from werkzeug.contrib.cache import MemcachedCache
-import bmemcached
+
 import hashlib
 import os
 
 class CacheUtils(object):
-    USERNAME = 'memcached-flights-pdxbmw'
-    PASSWORD = 'Ct3NYpnCDHqohseV'
-    URL      = 'pub-memcache-17464.us-east-1-4.1.ec2.garantiadata.com:17464'
+    
+    def __init__(self, app=None):
+        if app is not None:
+            self.init_app(app)
 
-    def __init__(self):
-        self.cache = MemcachedCache(current_app.config.get('MEMCACHE_SERVERS'))
-
-        '''
-        self.IS_DEV = app.config.get('IS_DEV')
-        if self.IS_DEV:
-            self.cache = MemcachedCache(['127.0.0.1:11211'])
-        else:
-            self.cache = bmemcached.Client(
-                    os.environ.get('MEMCACHEDCLOUD_SERVERS')  or self.URL, 
-                    os.environ.get('MEMCACHEDCLOUD_USERNAME') or self.USERNAME, 
-                    os.environ.get('MEMCACHEDCLOUD_PASSWORD') or self.PASSWORD    
-            )
-        '''
+    def init_app(self, app):
+        self.cache = MemcachedCache(app.config.get('MEMCACHE_SERVERS'))
     
     def delete(self, key):
         cache_key = hashlib.sha1(key).hexdigest()

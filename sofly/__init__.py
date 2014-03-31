@@ -4,6 +4,7 @@ from werkzeug.contrib.fixers import ProxyFix
 from sofly.helpers import Flask
 from sofly.middleware import MethodRewriteMiddleware
 from sofly.session import MongoSessionInterface
+from sofly.utils.cache import CacheUtils
 from sofly.utils.mail import MailUtils
 from sofly.utils.security import SecurityUtils
 
@@ -13,6 +14,7 @@ from config import config
 import logging
 import sys
 
+cache = CacheUtils()
 db = MongoEngine()
 mail = MailUtils()
 security = SecurityUtils()
@@ -33,6 +35,7 @@ def create_app(config_name):
     
     app.session_interface = MongoSessionInterface(app.config['MONGODB_SETTINGS'])
     
+    cache.init_app(app)
     db.init_app(app)
     mail.init_app(app)
     security.init_app(app)
