@@ -79,7 +79,7 @@ class TestingConfig(Config):
 
 
 class ProductionConfig(Config):
-    DEBUG = False
+    DEBUG = True
     MONGODB_SETTINGS = {
         #'USERNAME' : os.environ.get('MONGODB_USERNAME', ''),
         #'PASSWORD' : os.environ.get('MONGODB_PASSWORD', ''),
