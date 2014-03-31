@@ -65,11 +65,9 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     SECRET_KEY = os.environ.get('SECRET_KEY') or 't0p s3cr3t'
-    MONGODB_SETTINGS = {
-        'DB'       : 'sofly',
-        'HOST'     : 'localhost',
-        'PORT'     : 27017
-    }    
+    MONGODB_DB = 'sofly'
+    MONGODB_HOST = 'localhost'
+    MONGODB_PORT = 27017
 
 
 class TestingConfig(Config):
@@ -80,14 +78,12 @@ class TestingConfig(Config):
 
 class ProductionConfig(Config):
     DEBUG = True
-    MONGODB_SETTINGS = {
-        'USERNAME' : os.environ.get('MONGODB_USERNAME', ''),
-        'PASSWORD' : os.environ.get('MONGODB_PASSWORD', ''),
-        'DB'       : os.environ.get('MONGODB_DATABASE'),    
-        'HOST'     : os.environ.get('MONGODB_HOST'),
-        'PORT'     : 27017 or int(os.environ.get('MONGODB_PORT', 27017)),
-        'URL'      : os.environ.get('MONGO_URL')
-    }
+    MONGO_URL = os.environ.get('MONGO_URL')    
+    MONGODB_DB = os.environ.get('MONGODB_DATABASE')
+    MONGODB_HOST = os.environ.get('MONGODB_HOST')
+    MONGODB_PORT = 27017 or int(os.environ.get('MONGODB_PORT', 27017))
+    MONGODB_USERNAME = os.environ.get('MONGODB_USERNAME', '')
+    MONGODB_PASSWORD = os.environ.get('MONGODB_PASSWORD', '')    
 
 config = {
     'development': DevelopmentConfig,
