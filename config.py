@@ -40,6 +40,8 @@ class Config:
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME') or 'admin@sofly.co'
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD') or 'dGMPyJ2a7%HszA^ga6@D'
     MAIL_HOST = 'smtp.zoho.com:465'
+
+    MEMCACHE_SERVERS = os.environ.get('MEMCACHE_SERVERS', '127.0.0.1:11211')
     
     # FOR LATER 
     """
