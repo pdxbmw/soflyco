@@ -12,7 +12,7 @@ class CacheUtils(object):
     URL      = 'pub-memcache-17464.us-east-1-4.1.ec2.garantiadata.com:17464'
 
     def __init__(self):
-        self.cache = MemcachedCache(current_app.MEMCACHE_SERVERS)
+        self.cache = MemcachedCache(current_app.get('MEMCACHE_SERVERS'))
 
         '''
         self.IS_DEV = app.config.get('IS_DEV')
