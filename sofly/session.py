@@ -33,11 +33,11 @@ class MongoSession(CallbackDict, SessionMixin):
 
 class MongoSessionInterface(SessionInterface):
 
-    def __init__(self, settings, collection='sessions'):    
+    def __init__(self, app=None, collection='sessions'):    
         #uri = _mongo_uri(settings)
-        uri = settings.get('URL')
+        uri = app.config['MONGO_URL']
         client = MongoClient(uri)
-        self.store = client[settings['DB']][collection]
+        self.store = client[app.config['MONGO_DB']][collection]
         
     def open_session(self, app, request):
         sid = request.cookies.get(app.session_cookie_name)

@@ -33,7 +33,7 @@ def create_app(config_name):
     # production
     #sys.path.insert(0,"/var/www/sofly/")
     
-    app.session_interface = MongoSessionInterface(app.config['MONGODB_SETTINGS'])
+    app.session_interface = MongoSessionInterface(app)
     
     cache.init_app(app)
     db.init_app(app)
