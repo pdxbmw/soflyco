@@ -34,7 +34,8 @@ class MongoSession(CallbackDict, SessionMixin):
 class MongoSessionInterface(SessionInterface):
 
     def __init__(self, settings, collection='sessions'):    
-        uri = _mongo_uri(settings)
+        #uri = _mongo_uri(settings)
+        uri = settings.get('MONGO_URL')
         client = MongoClient(uri)
         self.store = client[settings['DB']][collection]
         
