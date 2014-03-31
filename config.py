@@ -81,11 +81,11 @@ class TestingConfig(Config):
 class ProductionConfig(Config):
     DEBUG = True
     MONGODB_SETTINGS = {
-        #'USERNAME' : 'admin' or os.environ.get('MONGODB_USERNAME', ''),
-        #'PASSWORD' : 'NHNJS0ZDQXErZThUbytGNGZWaGJlRklDdEVpMklGS28rSHZ6c0VtSGNhND0K' or os.environ.get('MONGODB_PASSWORD', ''),
+        'USERNAME' : os.environ.get('MONGODB_USERNAME', ''),
+        'PASSWORD' : os.environ.get('MONGODB_PASSWORD', ''),
         'DB'       : os.environ.get('MONGODB_DATABASE'),    
-        'HOST'     : 'localhost' or os.environ.get('MONGODB_HOST'),
-        'PORT'     : 27017 or int(os.environ.get('MONGODB_PORT', 27017))
+        'HOST'     : os.environ.get('MONGODB_HOST'),
+        'PORT'     : int(os.environ.get('MONGODB_PORT', 27017))
     }
 
 config = {
