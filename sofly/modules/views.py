@@ -9,19 +9,6 @@ module = Blueprint('base', __name__)
 
 crawlerUtils = CrawlerUtils()
 
-@module.before_request
-def before_request():
-    """
-    Pull user's profile from the database before every request are treated
-    """
-    g.user = None
-    if 'user_id' in session:
-        g.user = User.objects.get(id=ObjectId(session['user_id']))
-
-@module.route('/')
-def index():
-    return render_template('index.html')   
-
 @module.route('/crawl')
 def crawl():
     print request.args.get('token','')

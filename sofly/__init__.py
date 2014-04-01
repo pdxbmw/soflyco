@@ -46,7 +46,7 @@ def create_app(config_name):
     register_blueprints(app)
 
     @app.before_request
-    def before_request():
+    def before_request():    
         """
         Pull user's profile from the database before every request are treated
         """
@@ -56,6 +56,11 @@ def create_app(config_name):
         g.user = None
         if 'user_id' in session:
             g.user = User.objects.get(id=ObjectId(session['user_id']))    
+
+    @app.route('/')
+    def index():
+        from flask import render_template
+        return render_template('index.html')       
 
     return app
 

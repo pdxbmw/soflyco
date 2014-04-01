@@ -1,5 +1,5 @@
-    <div class="row">
-        <p class="start-over top-buffer bottom-buffer {% if request.path == '/' %}hidden{% endif %}" onclick="return;this.setAttribute('class','hidden')">
-            <a href="{{ url_for('base.index') }}"><i class="fa fa-angle-left right-pad"></i>Start over</a>
-        </p>
-    </div>   
+<div class="row">
+    <p class="start-over top-buffer bottom-buffer {% if request.path == '/' %}hidden{% endif %}" onclick="return;this.setAttribute('class','hidden')">
+        <a href="{{ url_for('index') }}"><i class="fa fa-angle-left right-pad"></i>Start over</a>
+    </p>
+</div>   
