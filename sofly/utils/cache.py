@@ -1,4 +1,6 @@
-from werkzeug.contrib.cache import MemcachedCache
+from flask.ext.cache import Cache
+
+#from werkzeug.contrib.cache import MemcachedCache
 
 import hashlib
 
@@ -9,8 +11,11 @@ class CacheUtils(object):
             self.init_app(app)
 
     def init_app(self, app):
-        print app.config.get('MEMCACHE_SERVERS')
-        self.cache = MemcachedCache([app.config.get('MEMCACHE_SERVERS')])
+        #self.cache = MemcachedCache([app.config.get('MEMCACHE_SERVERS')])
+        self.cache = Cache(app, config={
+            'CACHE_TYPE': 'memcached',
+            'CACHE_MEMCACHED_SERVERS' : [app.config.get('MEMCACHE_SERVERS')]
+            })
     
     def delete(self, key):
         cache_key = hashlib.sha1(key).hexdigest()
