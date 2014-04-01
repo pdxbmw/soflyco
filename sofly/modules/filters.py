@@ -9,8 +9,7 @@ module = Blueprint('filters', __name__)
 @module.app_template_global('tagline')
 def tagline():
     return Markup('Get the lowest price on your\
-        <a href="http://www.alaskaair.com/content/deals/special-offers\
-        /price-guarantee.aspx">Alaska Airline</a> flights')
+        <a href="http://www.alaskaair.com/content/deals/special-offers/price-guarantee.aspx">Alaska Airline</a> flights')
 
 # Filters
 @module.app_template_filter('apnumber')
