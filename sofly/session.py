@@ -24,10 +24,10 @@ def mongo_uri(app):
             app.config['MONGODB_PASSWORD']
             )
     uri += '%s:%d/%s' % (
-        app.config['MONGODB_HOST'], 
-        app.config['MONGODB_PORT'], 
-        app.config['MONGODB_DB']
-        )     
+            app.config['MONGODB_HOST'], 
+            app.config['MONGODB_PORT'], 
+            app.config['MONGODB_DB']
+            )     
     return uri         
 
 
@@ -40,7 +40,7 @@ class MongoSession(CallbackDict, SessionMixin):
 
 class MongoSessionInterface(SessionInterface):
 
-    def __init__(self, app=None, collection='sessions'):    
+    def __init__(self, app, collection='sessions'):    
         #uri = _mongo_uri(settings)
         uri = app.config.get('MONGO_URL') or mongo_uri(app)
         client = MongoClient(uri)

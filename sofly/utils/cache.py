@@ -1,8 +1,6 @@
-from Crypto.Cipher import AES
 from werkzeug.contrib.cache import MemcachedCache
 
 import hashlib
-import os
 
 class CacheUtils(object):
     
@@ -11,7 +9,7 @@ class CacheUtils(object):
             self.init_app(app)
 
     def init_app(self, app):
-        self.cache = MemcachedCache(app.config.get('MEMCACHE_SERVERS'))
+        self.cache = MemcachedCache([app.config.get('MEMCACHE_SERVERS')])
     
     def delete(self, key):
         cache_key = hashlib.sha1(key).hexdigest()
@@ -23,7 +21,4 @@ class CacheUtils(object):
 
     def set(self, key, value, **kwargs):
         cache_key = hashlib.sha1(key).hexdigest()
-        if self.IS_DEV:
-            self.cache.set(cache_key, value, timeout=kwargs.get('timeout',3600))
-        else:
-            self.cache.set(cache_key, value, time=kwargs.get('timeout',3600))
+        self.cache.set(cache_key, value, timeout=kwargs.get('timeout',3600))
