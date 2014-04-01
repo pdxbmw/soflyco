@@ -33,10 +33,10 @@ def home():
         for watcher in watch.watchers:
             if watcher.email == g.user.email:
                 claims += len(watcher.claims)
-                refunded += float(watcher.reservation['paid']) - \
-                            float(watcher.claims[-1]['price'])
+                if len(watcher.claims):
+                    refunded += float(watcher.reservation['paid']) - \
+                                float(watcher.claims[-1]['price'])
                 break
-        #print type(watch.get_claims(g.user.email))
     context = dict(
         user = g.user,
         claims = claims,
