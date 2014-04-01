@@ -33,7 +33,7 @@ def activation_email():
     if g.user:
         mail.send_activation_email()
         flash("An email has been sent to verify your email address.", 'info')
-    return redirect(request.path)
+    return redirect(url_for('users.home')) 
 
 @module.route('/activate/<payload>')
 def activate_user(payload):
