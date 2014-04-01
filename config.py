@@ -69,13 +69,11 @@ class DevelopmentConfig(Config):
 
 
 class TestingConfig(Config):
-    DEBUG = False
     TESTING = True
     SECRET_KEY = 'secret'
 
 
 class ProductionConfig(Config):
-    DEBUG = True
     MONGO_URL = os.environ.get('MONGO_URL')    
     MONGODB_DB = os.environ.get('MONGODB_DATABASE')
     MONGODB_HOST = os.environ.get('MONGODB_HOST')
