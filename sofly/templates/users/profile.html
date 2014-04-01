@@ -1,10 +1,71 @@
 {% extends "base.html" %}
 
+{% block head_styles %}
+    <style>
+        .thumbnail {
+            border: 0 none;
+            box-shadow: none;
+            background: #f3f3f3;
+            color: #444;
+            font-size: 48px;
+            line-height: 96px;
+        }
+    </style>
+{% endblock %}
+
 {% block masthead %}
     <h1>Profile</h1>
     <span class="text-muted"></span> 
 {% endblock masthead %}
 
 {% block content %}
-    Hi {{ user.first_name }}!
+    <div class="">
+        
+        {% if not user.verified %}
+        <p class="bs-callout bs-callout-danger">
+            Your email address has not been verified. 
+            <a href="{{ url_for('users.activation_email') }}">Click here to resend the verification email</a>
+        </p>
+        {% endif %}
+
+        <section class="row top-buffer text-center">
+            
+            <h3 class="inset">Your stats</h3>
+
+            <div class="row">        
+                <div class="col-md-4 bottom-buffer">
+                    <div class="thumbnail">
+                        {{ watching|default(0) }}
+                    </div>
+                    Flights Watched
+                    <div class="text-muted">
+                        Total number of flights we've watched for you.
+                    </div>
+                </div>
+                
+                <div class="col-md-4 bottom-buffer">
+                    <div class="thumbnail">
+                        {{ claims|default(0) }}
+                    </div>
+                    Claims Processed
+                    <div class="text-muted">
+                        Total number of refund claims you've made.
+                    </div>
+                </div>
+                
+                <div class="col-md-4 bottom-buffer">
+                    <div class="thumbnail">
+                        ${{ refunded|default(0) }}
+                    </div>
+                    Amount Refunded
+                    <div class="text-muted">
+                        Total amount of money you've saved.
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+
 {% endblock %}

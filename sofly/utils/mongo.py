@@ -139,7 +139,7 @@ class MongoUtils(object):
                     if exists:
                         if not exists.get('verified'):
                             flash("Your email address has not been verified. <a href=\"%s\"> \
-                                Click here to resend the verification email</a>." % url_for('activation_email'), 
+                                Click here to resend the verification email</a>." % url_for('users.activation_email'), 
                                 category="warning")
                             return False
                         else:

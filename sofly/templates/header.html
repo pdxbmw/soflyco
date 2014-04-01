@@ -3,11 +3,13 @@
         <nav class="header">
             <ul class="nav nav-pills pull-right">
                 {% if g.user %}
-                    <li class="text-muted welcome-user">
-                        Hi, {{ g.user.first_name }} 
-                        {% if not g.user.verified %}
-                            <span class="badge">unverified</span>
-                        {% endif %}
+                    <li class="text-muted">
+                        <a href="{{ url_for('users.home') }}">
+                            Hi, {{ g.user.first_name }} 
+                            {% if not g.user.verified %}
+                                <span class="badge">unverified</span>
+                            {% endif %}
+                        </a>
                     </li>
                     <li class="divider-vertical"></li>
                     <li><a href="{{ url_for('users.logout') }}">Logout</a></li>

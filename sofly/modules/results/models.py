@@ -26,6 +26,9 @@ class Watch(db.Document):
     def add_claim(self, email, paid):
         return self.filter(watchers__email=email).update_one(add_to_set__watchers__S__claims=Price(price=paid))
 
+    def get_claims(self, email):
+        return [watcher.claim for watcher in self.watchers if watcher.email == email]
+
     def update_price(self, price):
         if round(self.prices[-1].price,) != round(float(price)):
             new_price = Price(price=price)  

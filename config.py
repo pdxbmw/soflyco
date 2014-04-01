@@ -65,6 +65,7 @@ class DevelopmentConfig(Config):
     MONGODB_DB = 'sofly'
     MONGODB_HOST = 'localhost'
     MONGODB_PORT = 27017
+    SERVER_NAME = 'local.sofly.co:5000'
 
 
 class TestingConfig(Config):

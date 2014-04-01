@@ -11,6 +11,8 @@ from sofly.modules.users.forms import RegisterForm, LoginForm
 from sofly.modules.users.models import User
 from sofly.modules.users.decorators import login_required
 
+from sofly.modules.results.models import Watch
+
 module = Blueprint('users', __name__, url_prefix='/users')
 
 @module.before_request
@@ -25,7 +27,23 @@ def before_request():
 @module.route('/me/')
 @login_required
 def home():
-    return render_template('users/profile.html', user=g.user)
+    watched = Watch.objects(watchers__email=g.user.email).only('watchers').no_dereference()
+    claims, refunded = 0, 0
+    for watch in watched:
+        for watcher in watch.watchers:
+            if watcher.email == g.user.email:
+                claims += len(watcher.claims)
+                refunded += float(watcher.reservation['paid']) - \
+                            float(watcher.claims[-1]['price'])
+                break
+        #print type(watch.get_claims(g.user.email))
+    context = dict(
+        user = g.user,
+        claims = claims,
+        refunded = refunded,
+        watching = len(watched)
+    )
+    return render_template('users/profile.html', **context)
 
 @module.route('/activate')
 @login_required

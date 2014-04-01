@@ -123,11 +123,6 @@ input[type="submit"], button {
 .top-buffer { 
     margin-top: 20px; 
 }
-.welcome-user {
-    line-height: 40px;
-    margin-right: 5px;
-    vertical-align: middle;
-}
 .fade-in {
     opacity: 0;
 }
