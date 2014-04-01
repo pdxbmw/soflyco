@@ -15,9 +15,11 @@ class MailUtils(object):
             self.init_app(app)
 
     def init_app(self, app):
-        self.HOST = app.config['MAIL_HOST']
-        self.USER = app.config['MAIL_USERNAME'] 
-        self.PASS = app.config['MAIL_PASSWORD']
+        # setting explicitly for offline crawling
+        self.template_dir = os.path.join(os.environ.get('BASE_DIR',''), 'templates')        
+        self.MAIL_HOST = app.config['MAIL_HOST']
+        self.MAIL_USERNAME = app.config['MAIL_USERNAME'] 
+        self.MAIL_PASSWORD = app.config['MAIL_PASSWORD']
 
     def create_email_MIME(self, from_email, to_email, subject, body):
         msg = MIMEMultipart()
@@ -41,6 +43,7 @@ class MailUtils(object):
     def render_template(self, tmpl, template_values):
         from sofly.modules import filters
         env = Environment(loader=FileSystemLoader(self.template_dir))
+        
         env.filters['duration'] = filters.duration
         env.filters['no_stops'] = filters.no_stops
         env.globals['tagline'] = filters.tagline
@@ -62,11 +65,12 @@ class MailUtils(object):
         return url
 
     def send_email(self, to_email, subject, body, **kwargs):
+        print (self.MAIL_HOST, self.MAIL_USERNAME, self.MAIL_PASSWORD)
         from_email = kwargs.get('from_email', 'SoFly! <admin@sofly.co>')
         text = self.create_email_MIME(from_email, to_email, subject, body)
-        server = smtplib.SMTP_SSL(self.HOST, timeout=10)
+        server = smtplib.SMTP_SSL(self.MAIL_HOST, timeout=10)
         server.ehlo()
-        server.login(self.USER, self.PASS)
+        server.login(self.MAIL_USERNAME, self.MAIL_PASSWORD)
         server.sendmail(from_email, to_email, text)
         server.quit() 
 

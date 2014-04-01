@@ -12,12 +12,15 @@ from logging.handlers import SysLogHandler
 from config import config
 
 import logging
+import os
 import sys
 
 cache = CacheUtils()
 db = MongoEngine()
 mail = MailUtils()
 security = SecurityUtils()
+
+os.environ['BASE_DIR'] = os.path.abspath(os.path.dirname(__file__))
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -41,6 +44,18 @@ def create_app(config_name):
     security.init_app(app)
 
     register_blueprints(app)
+
+    @app.before_request
+    def before_request():
+        """
+        Pull user's profile from the database before every request are treated
+        """
+        from flask import g, session
+        from bson import ObjectId
+        from sofly.modules.users.models import User
+        g.user = None
+        if 'user_id' in session:
+            g.user = User.objects.get(id=ObjectId(session['user_id']))    
 
     return app
 

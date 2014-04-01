@@ -13,6 +13,15 @@ from sofly.modules.users.decorators import login_required
 
 module = Blueprint('users', __name__, url_prefix='/users')
 
+@module.before_request
+def before_request():
+    """
+    Pull user's profile from the database before every request are treated
+    """
+    g.user = None
+    if 'user_id' in session:
+        g.user = User.objects.get(id=ObjectId(session['user_id']))
+
 @module.route('/me/')
 @login_required
 def home():
