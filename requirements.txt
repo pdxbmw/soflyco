@@ -13,6 +13,5 @@ premailer>=1.13
 pycrypto>=2.6.1
 pymongo>=2.6.3
 pyquery>=1.2.8
-python-binary-memcached>=0.22
 pytz
 requests>=1.0.4
