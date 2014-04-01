@@ -9,7 +9,8 @@ class CacheUtils(object):
             self.init_app(app)
 
     def init_app(self, app):
-        self.cache = MemcachedCache(servers=app.config.get('MEMCACHE_SERVERS'))
+        print app.config.get('MEMCACHE_SERVERS')
+        self.cache = MemcachedCache([app.config.get('MEMCACHE_SERVERS')])
     
     def delete(self, key):
         cache_key = hashlib.sha1(key).hexdigest()
