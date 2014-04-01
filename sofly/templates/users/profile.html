@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block masthead %}
+    <h1>Profile</h1>
+    <span class="text-muted"></span> 
+{% endblock masthead %}
+
 {% block content %}
     Hi {{ user.first_name }}!
 {% endblock %}
