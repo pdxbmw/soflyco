@@ -9,7 +9,8 @@ import os
 import pkgutil
 import importlib
 
-from flask import Blueprint, Config, Flask as BaseFlask, request, url_for
+from flask import Blueprint, Config, Flask as BaseFlask, \
+    current_app, request, url_for
 
 def register_blueprints(app, package_name, package_path):
     """
@@ -31,7 +32,7 @@ def register_blueprints(app, package_name, package_path):
     return rv
 
 def _get_link(route, payload):
-    ctx = app.test_request_context()
+    ctx = current_app.test_request_context()
     ctx.push()
     url = url_for(route, payload=payload, _external=True)            
     ctx.pop()
