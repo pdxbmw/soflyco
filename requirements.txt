@@ -13,6 +13,7 @@ mongoengine==0.8.7
 newrelic==2.16.0.12
 premailer==1.13
 pycrypto==2.6.1
+python-memcached==1.53
 pymongo==2.6.3
 pyquery==1.2.8
 pytz==2012j
