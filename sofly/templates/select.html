@@ -7,9 +7,9 @@
 {% endblock head_styles %}
 
 {% block masthead %}
-    <h1>SoFly!</h1>
+    <h1>Itinerary</h1>
     <span class="text-muted">
-        {{ tagline() }}
+        We need to find your flights
     </span> 
 {% endblock masthead %}
 
@@ -17,14 +17,16 @@
     <article class="container">
 
         <section class="row top-buffer text-center">
-            <h3 class="inset">Let's locate your itinerary</h3>
-
-            <div class="top-buffer col-md-6">
-                <a href="{{ url_for('search.reservation') }}" class="btn btn-primary block">I purchased a ticket on alaskaair.com</a>
-            </div>
             
-            <div class="top-buffer col-md-6">
-                <a href="{{ url_for('search.search') }}" class="btn btn-primary block">I want to search for flights</a>                 
+            <h3 class="inset hidden"></h3>
+            
+            <div class="col-md-8 col-md-offset-2">
+                <p><a href="{{ url_for('search.reservation') }}" class="btn btn-default block">
+                    I have a confirmation number
+                </a></p>
+                <p><a href="{{ url_for('search.search') }}" class="btn btn-default block">
+                    I want to manually search
+                </a></p>
             </div>
             
         </section>

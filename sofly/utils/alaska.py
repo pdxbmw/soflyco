@@ -2,8 +2,6 @@ from flask import abort, current_app
 
 from sofly import cache, security
 from sofly.helpers import FlashMessage, InvalidUsage, load_json_file
-#from sofly.utils.cache import CacheUtils
-#from sofly.utils.security import SecurityUtils
 
 from collections import namedtuple, OrderedDict
 from copy import deepcopy
@@ -245,15 +243,15 @@ class Reservation(Itinerary):
             return re.search("^.*\((.*)\).*$", node).group(1)[:3]
 
         def get_datetime(element, index):
-            # Just using travel dates for year now
-            travel_date = self.travel_dates[index]
-            (year, month, day) = travel_date.split('-')
             date = element.find('.FlightTimeContainer').text().split()
             # Trying lookup by abbreviated date
-            months = {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6, 'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12}
+            months = {'Jan':1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,'Jul':7,'Aug':8,'Sep':9,'Oct':10,'Nov':11,'Dec':12}
             month = months[date[3]]
+            (month, day) = (months[date[3]], date[4])
             twelve_hour = '%s %s' % (date[0], date[1])
             twenty_four = datetime.datetime.strptime(twelve_hour, '%I:%M %p').strftime('%H:%M').split(':')
+            # Just using travel dates for year now
+            year = [i.split('-')[0] for i in self.travel_dates if int(i.split('-')[1]) == month][0]
             return datetime.datetime(int(year), int(month), int(date[4]), int(twenty_four[0]), int(twenty_four[1]))
 
         def get_cabin():

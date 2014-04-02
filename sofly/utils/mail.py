@@ -65,7 +65,6 @@ class MailUtils(object):
         return url
 
     def send_email(self, to_email, subject, body, **kwargs):
-        print (self.MAIL_HOST, self.MAIL_USERNAME, self.MAIL_PASSWORD)
         from_email = kwargs.get('from_email', 'SoFly! <admin@sofly.co>')
         text = self.create_email_MIME(from_email, to_email, subject, body)
         server = smtplib.SMTP_SSL(self.MAIL_HOST, timeout=10)
@@ -75,6 +74,7 @@ class MailUtils(object):
         server.quit() 
 
     def send_fare_alert(self, watcher, search):
+        from sofly import helpers
         itinerary = search.itineraries[0]
         subject = 'Fare Alert: '
         for flight in itinerary.flights:

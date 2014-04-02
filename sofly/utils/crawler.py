@@ -10,10 +10,17 @@ alaskaUtils = AlaskaUtils()
 
 class CrawlerUtils(object):
 
+    def __init__(self, app=None):
+        if app is not None:
+            self.init_app(app)
+
+    def init_app(self, app):
+        self.app = app
+
     def check_price_by_user(self, doc, search):
         itinerary = search.itineraries[0]
         for watcher in doc.watchers:
-            paid = watcher.claims[-1].get('paid') if watcher.claims else watcher.reservation.get('paid')
+            paid = watcher.claims[-1].price if watcher.claims else watcher.reservation.get('paid')
             if round(float(paid)) > round(float(itinerary.price)):
                 print 'User paid %s. Price is now %s.' % (paid, itinerary.price)
                 mail.send_fare_alert(watcher, search)

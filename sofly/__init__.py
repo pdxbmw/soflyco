@@ -1,4 +1,4 @@
-from flask.ext.mongoengine import MongoEngine
+from flask.ext.mongoengine import MongoEngine, MongoEngineSessionInterface
 from werkzeug.contrib.fixers import ProxyFix
 
 from sofly.helpers import Flask
@@ -15,6 +15,9 @@ import logging
 import os
 import sys
 
+# debug toolbar
+from flask_debugtoolbar import DebugToolbarExtension
+
 cache = CacheUtils()
 db = MongoEngine()
 mail = MailUtils()
@@ -30,20 +33,36 @@ def create_app(config_name):
 
     syslog_handler = SysLogHandler()
     syslog_handler.setLevel(logging.DEBUG)
-    #logging.basicConfig(stream=sys.stderr)
     app.logger.addHandler(syslog_handler)
-
-    # production
-    #sys.path.insert(0,"/var/www/sofly/")
     
-    app.session_interface = MongoSessionInterface(app)
+    #app.session_interface = MongoSessionInterface(app)
     
     cache.init_app(app)
     db.init_app(app)
     mail.init_app(app)
     security.init_app(app)
 
+    app.session_interface = MongoEngineSessionInterface(db)
+
     register_blueprints(app)
+
+    # debug toolbar
+    app.config['DEBUG_TB_PROFILER_ENABLED'] = True
+    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+    app.config['DEBUG_TB_TEMPLATE_EDITOR_ENABLED'] = True
+    app.config['DEBUG_TB_PANELS'] = (
+                'flask_debugtoolbar.panels.versions.VersionDebugPanel',
+                'flask_debugtoolbar.panels.timer.TimerDebugPanel',
+                'flask_debugtoolbar.panels.headers.HeaderDebugPanel',
+                'flask_debugtoolbar.panels.request_vars.RequestVarsDebugPanel',
+                'flask_debugtoolbar.panels.config_vars.ConfigVarsDebugPanel',
+                'flask_debugtoolbar.panels.template.TemplateDebugPanel',
+                #'flask_debugtoolbar.panels.sqlalchemy.SQLAlchemyDebugPanel',
+                'flask_debugtoolbar.panels.logger.LoggingPanel',
+                'flask_debugtoolbar.panels.profiler.ProfilerDebugPanel',
+                'flask.ext.mongoengine.panels.MongoDebugPanel'
+            )
+    toolbar = DebugToolbarExtension(app)    
 
     @app.before_request
     def before_request():    
