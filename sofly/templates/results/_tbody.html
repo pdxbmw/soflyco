@@ -2,7 +2,7 @@
     {% for flight in itinerary.flights %}
     {% if not flight.duplicate %}
         <tr data-identifier="{{ flight.identifier }}" data-price="{{ flight.price }}">
-            <td class="hidden">{{ flight.depart.strftime('%a, %b %d') }}</td>
+            <td class="{% if not show_date %}hidden{% endif %}">{{ flight.depart.strftime('%a, %b %d') }}</td>
             <td>{{ flight.origin|airport_code }}</td>
             <td data-dateformat="h:mm A">{{ flight.depart.strftime('%I:%M %p').lstrip('0') }}</td>
             <td>{{ flight.destination|airport_code }}</td>

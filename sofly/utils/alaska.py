@@ -184,6 +184,8 @@ class Itinerary(object):
             flight.stops = item[34:35]
             flight.connections = get_connections(item[35:])
 
+        return self
+
     @property
     def identifier(self):
         return '|'.join([flight.identifier for flight in self.flights])

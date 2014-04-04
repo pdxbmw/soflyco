@@ -18,6 +18,10 @@ def apnumber(arg):
     return out
     #return 'no' if out == '0' else out
 
+@module.app_template_filter('no_for_zero')
+def no_for_zero(arg):
+    return 'no' if arg == '0' else arg    
+
 @module.app_template_filter('airport_code')
 def airport_code(arg):
     out = ''

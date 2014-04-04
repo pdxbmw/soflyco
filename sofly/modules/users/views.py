@@ -10,8 +10,8 @@ from sofly import db, mail, security
 from sofly.modules.users.forms import RegisterForm, LoginForm
 from sofly.modules.users.models import User
 from sofly.modules.users.decorators import login_required
-
 from sofly.modules.results.models import Watch
+from sofly.utils.alaska import Itinerary
 
 module = Blueprint('users', __name__, url_prefix='/users')
 
@@ -27,21 +27,29 @@ def before_request():
 @module.route('/me/')
 @login_required
 def home():
-    watched = Watch.objects(watchers__email=g.user.email).only('watchers').no_dereference()
+    watched = Watch.objects(watchers__email=g.user.email).no_dereference()
     claims, refunded = 0, 0
+    itineraries = []
     for watch in watched:
+        itinerary = Itinerary().from_identifier(watch.identifier)
+        itinerary.price = watch.prices[-1].price
         for watcher in watch.watchers:
             if watcher.email == g.user.email:
+                itinerary.claims = watcher.claims
+                itinerary.paid = watcher.reservation['paid']
                 claims += len(watcher.claims)
                 if len(watcher.claims):
                     refunded += float(watcher.reservation['paid']) - \
                                 float(watcher.claims[-1]['price'])
+                    itinerary.refunded = refunded
                 break
+        itineraries.append(itinerary)                
     context = dict(
         user = g.user,
         claims = claims,
         refunded = refunded,
-        watching = len(watched)
+        itineraries = itineraries,
+        watching = watched
     )
     return render_template('users/profile.html', **context)
 
