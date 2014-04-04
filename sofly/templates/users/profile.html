@@ -2,13 +2,19 @@
 
 {% block head_styles %}
     <style>
-        .thumbnail {
+        body {
+            font-weight: 300;
+        }
+        #total_stats .thumbnail {
             border: 0 none;
             box-shadow: none;
             background: #f3f3f3;
             color: #444;
             font-size: 48px;
             line-height: 96px;
+        }
+        .itinerary-stats .thumbnail {
+            margin-bottom: 5px;
         }
     </style>
 {% endblock %}
@@ -28,9 +34,9 @@
         </p>
         {% endif %}
 
-        <section class="row top-buffer text-center">
+        <section id="total_stats" class="row top-buffer text-center">
             
-            <h3 class="inset hidden">Your stats</h3>
+            <h3 class="inset">Your stats</h3>
 
             <div class="row">        
                 <div class="col-md-4 bottom-buffer">
@@ -83,10 +89,42 @@
                         </table>
                     </div>
                     <div class="panel-footer text-center">
-                        Currently ${{ itinerary.price }}. 
-                        You paid ${{ '%0.2f' % itinerary.paid|float }} 
-                        and have made {{ itinerary.claims|length|apnumber|no_for_zero }} claim{{ itinerary.claims|pluralize }}
-                        for ${{ '%0.2f' % itinerary.refunded|default(0)|float }} in refunds.
+                        {% if False %}
+                            Currently ${{ itinerary.price }}. 
+                            You paid ${{ '%0.2f' % itinerary.paid|float }} 
+                            and have made {{ itinerary.claims|length|apnumber|no_for_zero }} claim{{ itinerary.claims|pluralize }}
+                            for ${{ '%0.2f' % itinerary.refunded|default(0)|float }} in refunds.
+                        {% endif  %}
+
+                        <div class="row itinerary-stats">        
+                            <div class="col-md-3">
+                                <div class="thumbnail">
+                                    ${{ itinerary.price }}
+                                </div>
+                                <div class="text-muted">Current Price</div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="thumbnail">
+                                    ${{ '%0.2f' % itinerary.paid|float }} 
+                                </div>
+                                <div class="text-muted">Amount Paid</div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="thumbnail">
+                                    {{ itinerary.claims|length }}
+                                </div>
+                                <div class="text-muted">Claims Made</div>
+                            </div>     
+
+                            <div class="col-md-3">
+                                <div class="thumbnail">
+                                    ${{ '%0.2f' % itinerary.refunded|default(0)|float }}
+                                </div>
+                                <div class="text-muted">Amount Refunded</div>
+                            </div>                                                    
+                        </div>                        
                     </div>
                 </div> 
             {% endfor %}
