@@ -364,7 +364,7 @@ class Reservation(Itinerary):
         self.set_payment_method()
 
     def set_payment_method(self):
-        text = self.html('#divFareAndTaxes > div:first > .amount').text().lower()
+        text = self.html('#divFareAndTaxes > div:first > .amount').text().lower().replace(',','')
         if 'miles' in text:
             self.miles = text
         else:
