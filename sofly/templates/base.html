@@ -8,11 +8,24 @@
         <meta name="author" content="Andi Greisel">
         <meta charset="utf-8">
 
+        {% if False %}
         <link href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/yeti/bootstrap.min.css" rel="stylesheet">
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+        <link href="{{ url_for('static', filename='theme/css/bootstrap.css', _external=True) }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='theme/css/main.css', _external=True) }}" rel="stylesheet">
+        <link href='http://fonts.googleapis.com/css?family=Lato:300,400,900' rel='stylesheet' type='text/css'>
+        {% endif %}
+
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/style.css', _external=True) }}" rel="stylesheet/less" type="text/css">
+
+        {% assets "css_all" -%}
+            <link rel="stylesheet" href="{{ ASSET_URL }}">
+        {%- endassets %}        
+
         <link href="{{ url_for('static', filename='css/bootstrap-sortable.css', _external=True) }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='css/datepicker.css', _external=True) }}" rel="stylesheet">
-        <link href="{{ url_for('static', filename='css/style.css', _external=True) }}" rel="stylesheet">
         <link rel="shortcut icon" href="{{ url_for('static', filename='ico/favicon.ico', _external=True) }}">
         {% block head_styles %}{% endblock head_styles %}
 

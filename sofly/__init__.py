@@ -1,6 +1,8 @@
+from flask.ext.assets import Environment, Bundle
 from flask.ext.mongoengine import MongoEngine, MongoEngineSessionInterface
 from werkzeug.contrib.fixers import ProxyFix
 
+from sofly import assets
 from sofly.helpers import Flask
 from sofly.middleware import MethodRewriteMiddleware
 from sofly.session import MongoSessionInterface
@@ -37,6 +39,7 @@ def create_app(config_name):
     
     #app.session_interface = MongoSessionInterface(app)
     
+    assets.init_app(app)
     cache.init_app(app)
     db.init_app(app)
     mail.init_app(app)

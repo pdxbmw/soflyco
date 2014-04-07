@@ -58,3 +58,9 @@ dokku config:set sofly FLASK_CONFIG=production
 
 # manual start with docker
 # docker run -t -i -e PORT=5000 app/sofly /bin/bash -c "/start web"
+
+# install npm and less
+sudo apt-add-repository ppa:chris-lea/node.js
+sudo apt-get update
+sudo apt-get install nodejs
+sudo npm install -g less
