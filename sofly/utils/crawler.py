@@ -1,12 +1,9 @@
-from sofly import mail, security
+import sofly
+from sofly import mail
 from sofly.modules.results.models import Watch
 from sofly.modules.users.models import User
-from sofly.utils.alaska import AlaskaUtils
 
-from pprint import pprint
 import datetime
-
-alaskaUtils = AlaskaUtils()
 
 class CrawlerUtils(object):
 
@@ -21,21 +18,18 @@ class CrawlerUtils(object):
         itinerary = search.itineraries[0]
         for watcher in doc.watchers:
             paid = watcher.claims[-1].price if watcher.claims else watcher.reservation.get('paid')
+            print 'User paid %s. Price is now %s.' % (paid, itinerary.price)
             if round(float(paid)) > round(float(itinerary.price)):
-                print 'User paid %s. Price is now %s.' % (paid, itinerary.price)
                 mail.send_fare_alert(watcher, search)
 
     def crawl(self):
-        docs = Watch.objects(expires__gt=datetime.datetime.utcnow())
-        for doc in docs:
+        print 'crawl init'
+        with self.app.app_context():
+            docs = Watch.objects(expires__gt=datetime.datetime.utcnow())
+            print 'found %i docs' % len(docs)
             try:
-                search = self.fetch(doc)
-                if search:
-                    identifier = doc.identifier
-                    search.set_itinerary_by_identifier(identifier)
-                    itinerary = search.itineraries[0]
-                    self.check_price_by_user(doc, search)
-                    doc.update_price(itinerary.price)
+                for doc in docs:
+                    self.fetch(doc)
             except Exception as e:
                 print e
 
@@ -46,7 +40,13 @@ class CrawlerUtils(object):
 
         """
         if doc.search_params:
-            return alaskaUtils.crawl(doc.search_params)
+            search = sofly.utils.alaska.AlaskaUtils().crawl(doc.search_params)
+            if search:
+                identifier = doc.identifier
+                search.set_itinerary_by_identifier(identifier)
+                itinerary = search.itineraries[0]
+                self.check_price_by_user(doc, search)
+                doc.update_price(itinerary.price)            
         else:
             print "No search params in document."
         return

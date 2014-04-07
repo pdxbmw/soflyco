@@ -2,6 +2,7 @@
     <header class="row">
         <nav class="header">
             <ul class="nav nav-pills pull-right">
+                <li><a href="{{ url_for('search.select') }}">Search</a></li>
                 {% if g.user %}
                     <li class="text-muted">
                         <a href="{{ url_for('users.home') }}">
@@ -36,7 +37,7 @@
             </h3>            
             <ul class="nav nav-pills pull-left left-buffer">
                 <li class="divider-vertical"></li>
-                <li><a href="{{ url_for('search.select') }}">Search</a></li>
+                
             </ul>
         </nav>
     </header>

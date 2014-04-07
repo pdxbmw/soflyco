@@ -635,9 +635,9 @@ class Search(object):
         self.parse(response)
 
     def fetch(self, search_params=None):
-
+        
         try:
-
+            
             self.search_params = search_params or self.get_search_params()
 
             self.search_params_encoded = security.json_encrypt(self.search_params)

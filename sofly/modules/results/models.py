@@ -14,6 +14,7 @@ class Watcher(db.EmbeddedDocument):
 
 class Watch(db.Document):
     created = db.DateTimeField(default=datetime.datetime.utcnow)
+    updated = db.DateTimeField(default=datetime.datetime.utcnow)
     expires = db.DateTimeField(required=True)
     identifier = db.StringField(primary_key=True, required=True)
     search_params = db.DictField()
@@ -22,6 +23,12 @@ class Watch(db.Document):
 
     def __unicode__(self):
         return self.identifier
+
+    '''def save(self, *args, **kwargs):
+        if not self.created:
+            self.created = datetime.datetime.now()
+        self.updated = datetime.datetime.now()
+        return super(Watch, self).save(*args, **kwargs)'''
 
     def add_claim(self, email, paid):
         return self.filter(watchers__email=email).update_one(add_to_set__watchers__S__claims=Price(price=paid))
@@ -32,7 +39,8 @@ class Watch(db.Document):
     def update_price(self, price):
         if round(self.prices[-1].price,) != round(float(price)):
             new_price = Price(price=price)  
-            self.update(add_to_set__prices=new_price)     
+            self.updated = datetime.datetime.now()
+            self.update(add_to_set__prices=new_price)   
 
     meta = {
             'allow_inheritance': True,
