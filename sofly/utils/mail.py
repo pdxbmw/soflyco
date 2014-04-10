@@ -66,10 +66,10 @@ class MailUtils(object):
 
     def send_fare_alert(self, watcher, search):
         from sofly import helpers
-        itinerary = search.itineraries[0]
-        #subject = 'Fare Alert: '
+        itinerary, subject = search.itineraries[0], ''
         for flight in itinerary.flights:
-            subject += '%s to %s, %s | ' % (
+            subject += '%s%s to %s, %s ' % (
+                    ' | ' if subject != '' else '',
                     flight.origin,
                     flight.destination,
                     flight.depart.strftime('%a, %b %d')

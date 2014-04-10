@@ -25,7 +25,7 @@
         <div class="panel-footer text-center">
             {% set difference = reservation.paid|int - itinerary.price|int %}
             <span class="text-danger">
-                <b>The price is now ${{ difference }} less.</b>
+                <b>The price is now ${{ difference|abs }} less.</b>
             </span>
         </div>    
     </div>
@@ -36,6 +36,6 @@
         Click here to get refunded
     </a>
     <div style="font-size: 14px; padding-top:20px">
-        <small class="text-muted">Using this link helps us track your claims and update your alerts.</small>
+        <small class="text-muted">Using this link helps us track and update your alerts.</small>
     </div>
 {% endblock footer %}
