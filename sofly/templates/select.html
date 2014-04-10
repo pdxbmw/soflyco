@@ -2,7 +2,20 @@
 
 {% block head_styles %}
     <style>
-
+        .thumbnail {
+            border: 0;
+            padding: 15px;
+        }
+        .thumbnail:hover {
+            background: #f9f9f9;
+        }
+        a:hover {
+            text-decoration: none;
+        }
+        i {
+            font-size: 48px;
+            margin-bottom: 0px;
+        }
     </style>
 {% endblock head_styles %}
 
@@ -20,13 +33,38 @@
             
             <h3 class="inset hidden"></h3>
             
-            <div class="col-md-8 col-md-offset-2">
-                <p><a href="{{ url_for('search.reservation') }}" class="btn btn-default block">
-                    I have a confirmation number
-                </a></p>
-                <p><a href="{{ url_for('search.search') }}" class="btn btn-default block">
-                    I want to manually search
-                </a></p>
+            <div class="col-md-offset-1 row">
+
+                <div class="col-md-5">                        
+                    <div class="thumbnail">
+                        <a href="{{ url_for('search.reservation') }}" class="">
+                            <i class="glyphicon glyphicon-map-marker"></i>
+                            <div class="caption">
+                                <h3>Reservation</h3>
+                                <p class="text-muted">
+                                    We'll automatically locate your reservation and
+                                    get the current price.
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-5">                        
+                    <div class="thumbnail">
+                        <a href="{{ url_for('search.search') }}" class="">
+                            <i class="glyphicon glyphicon-search"></i>
+                            <div class="caption">
+                                <h3>Search</h3>
+                                <p class="text-muted">
+                                    You can manually search for your itinerary
+                                    to get the current price.
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
             </div>
             
         </section>
