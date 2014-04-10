@@ -24,11 +24,13 @@ class Watch(db.Document):
     def __unicode__(self):
         return self.identifier
 
-    '''def save(self, *args, **kwargs):
+    '''
+    def save(self, *args, **kwargs):
         if not self.created:
             self.created = datetime.datetime.now()
         self.updated = datetime.datetime.now()
-        return super(Watch, self).save(*args, **kwargs)'''
+        return super(Watch, self).save(*args, **kwargs)
+    '''
 
     def add_claim(self, email, paid):
         return self.filter(watchers__email=email).update_one(add_to_set__watchers__S__claims=Price(price=paid))

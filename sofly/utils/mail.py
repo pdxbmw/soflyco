@@ -4,6 +4,7 @@ from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 from jinja2 import Environment, FileSystemLoader
 
+import datetime
 import os
 import premailer
 import smtplib
@@ -29,16 +30,6 @@ class MailUtils(object):
         msg.attach(MIMEText(body, 'html', 'utf-8'))
         text = msg.as_string()
         return text   
-        
-    def watching_template(self, request, itinerary):
-        itinerary.price = request.form.get('price')
-        context = dict(
-            itinerary = itinerary, 
-            reservation = dict(
-                paid = request.form.get('paid')
-            )
-        )
-        return self.render_template('email/watching.html', context)
 
     def render_template(self, tmpl, template_values):
         from sofly.modules import filters
@@ -76,14 +67,15 @@ class MailUtils(object):
     def send_fare_alert(self, watcher, search):
         from sofly import helpers
         itinerary = search.itineraries[0]
-        subject = 'Fare Alert: '
+        #subject = 'Fare Alert: '
         for flight in itinerary.flights:
-            subject += '%s >> %s, %s' % (
+            subject += '%s to %s, %s | ' % (
                     flight.origin,
                     flight.destination,
-                    flight.depart
+                    flight.depart.strftime('%a, %b %d')
                 )       
-        claim_link = helpers.get_claim_link(itinerary.identifier, watcher.email, itinerary.price)
+        claim_link = helpers.get_claim_link(itinerary.identifier, 
+            watcher.email, itinerary.price)
         context = dict(
             claim_link = claim_link,
             itinerary = itinerary,
@@ -92,6 +84,17 @@ class MailUtils(object):
         )
         html = self.render_template('email/fare_alert.html', context)
         if html:   
-            self.send_email(watcher.email, subject, html)
+            self.send_email(watcher.email, subject, html,
+                from_email='SoFly! Fare Alert <admin@sofly.co>')
         else:
-            print "Error. No fare alert sent."        
+            print "Error. No fare alert sent."    
+
+    def watching_template(self, request, itinerary):
+        itinerary.price = request.form.get('price')
+        context = dict(
+            itinerary = itinerary, 
+            reservation = dict(
+                paid = request.form.get('paid')
+            )
+        )
+        return self.render_template('email/watching.html', context)                
