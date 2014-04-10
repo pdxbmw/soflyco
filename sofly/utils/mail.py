@@ -68,7 +68,7 @@ class MailUtils(object):
         from sofly import helpers
         itinerary, subject = search.itineraries[0], ''
         for flight in itinerary.flights:
-            subject += '%s%s to %s, %s ' % (
+            subject += '%s%s to %s on %s ' % (
                     ' | ' if subject != '' else '',
                     flight.origin,
                     flight.destination,
