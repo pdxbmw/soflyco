@@ -80,7 +80,9 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3>
-                            {{ itinerary.flights[0].depart.strftime('%a, %b %d') }}
+                            {{ itinerary.flights[0].depart.strftime('%b %d') }}
+                            <i class="">-</i>
+                            {{ itinerary.flights[-1].depart.strftime('%b %d') }}
                         </h3>
                     </div>
                     <div class="panel-body table-responsive">
