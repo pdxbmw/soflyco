@@ -1,24 +1,19 @@
 from flask import abort, g, flash, redirect, request, session, url_for
 
+from sofly.helpers import is_ajax
+
 from functools import wraps
 
-"""
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if session.get('user') is None:
-            abort(401)
-            #return redirect(url_for('login', next=request.url))
-        return f(*args, **kwargs)
-    return decorated_function
-"""
 
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if g.user is None:
-            flash(u'You need to be signed in for this page.', 'warning')
-            return redirect(url_for('users.login', next=request.path))
+            if is_ajax:
+                abort(401)
+            else:
+                flash(u'You need to be signed in for this page.', 'warning')
+                return redirect(url_for('users.login', next=request.path))
         return f(*args, **kwargs)
     return decorated_function    
 

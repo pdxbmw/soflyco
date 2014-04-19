@@ -1,4 +1,4 @@
-from flask import abort, current_app
+from flask import abort, current_app, session
 
 from sofly import cache, security
 from sofly.helpers import FlashMessage, InvalidUsage, load_json_file
@@ -217,16 +217,16 @@ class Reservation(Itinerary):
         Reservations contain a single itinerary
     
     """    
-    def __init__(self, request=None):
+    def __init__(self, request=None, **kwargs):
         super(Reservation, self).__init__()
         self.current_price = 0
         self.discount = 0
-        self.last_name = None
         self.paid = 0
         self.request = request
         self.search_params = {}
         self.submit_attempts = 0
-        self.ticket_code = None
+        self.last_name = kwargs.get('name')
+        self.ticket_code = kwargs.get('code')
 
     #def __getitem__(self, key):
     #    return self.key
@@ -321,13 +321,15 @@ class Reservation(Itinerary):
     def fetch(self):
         self.submit_attempts += 1
         
-        if not self.request.form:
+        if self.ticket_code and self.last_name:
+            pass
+        elif self.request.form:
+            self.last_name = self.request.form['name']
+            self.ticket_code = self.request.form['code']
+        else:
             self.abort()
 
         try:
-
-            self.last_name = self.request.form['name']
-            self.ticket_code = self.request.form['code']
             
             values = dict(
                 TravelerLastName = self.last_name,
@@ -771,7 +773,13 @@ class AlaskaUtils:
         return itinerary
 
     def reservation(self, request):
-        reservation = Reservation(request)
+        if request.method == 'GET' and session.get('reservation'):
+            reservation = Reservation(
+                name=session.get('reservation').get('name'), 
+                code=session.get('reservation').get('code')
+                )
+        else:
+            reservation = Reservation(request)
         reservation.dispatcher()
         return reservation      
 

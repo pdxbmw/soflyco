@@ -38,15 +38,18 @@ def results():
 @module.route('/reservation', methods=['GET', 'POST'])
 def reservation():    
     # save user inputs in case an error handler's invoked
-    if request.method == 'POST' and session.has_key('reservation'):
-        session['reservation']['name'] = request.form['name']
-        session['reservation']['code'] = request.form['code']
+    if request.method == 'POST':
+        session['reservation'] = {
+            'name': request.form['name'],
+            'code': request.form['code']
+            }
+        print session['reservation']
     reservation = alaskaUtils.reservation(request)
     results = alaskaUtils.search(request, reservation=reservation)
     response = make_response(render_template('results/results.html', results=results))
     # kill session variable if request is successful
-    if session.has_key('reservation'):
-        session.pop('reservation')
+    #if session.has_key('reservation'):
+        #session.pop('reservation')
     return response 
 
 @module.route('/watch', methods=['POST'])

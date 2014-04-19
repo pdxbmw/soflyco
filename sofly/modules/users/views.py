@@ -7,9 +7,10 @@ from itsdangerous import BadSignature
 from werkzeug import check_password_hash, generate_password_hash
 
 from sofly import db, mail, security
+from sofly.decorators import login_required
+from sofly.helpers import is_ajax
 from sofly.modules.users.forms import RegisterForm, LoginForm
 from sofly.modules.users.models import User
-from sofly.modules.users.decorators import login_required
 from sofly.modules.results.models import Watch
 from sofly.utils.alaska import Itinerary
 
@@ -23,6 +24,10 @@ def before_request():
     g.user = None
     if 'user_id' in session:
         g.user = User.objects.get(id=ObjectId(session['user_id']))
+
+@module.route('/log/')
+def log():
+    return redirect(url_for('results.reservation')) 
 
 @module.route('/me/')
 @login_required
@@ -98,9 +103,10 @@ def login():
             else:
                 flash('Welcome back, %s!' % user.first_name, 'success')
             session['user_id'] = user.id
-            return redirect(url_for('users.home'))
+            return redirect(request.args.get('url') or url_for('users.home', url=url))
         flash('Wrong email or password', 'danger')
-    return render_template('users/login.html', form=form)
+    template = '_login' if is_ajax(request) else 'login'
+    return render_template('users/%s.html' % template, form=form)
 
 @module.route('/login/<provider>/', methods=['GET', 'POST'])
 def login_provider(provider=None):

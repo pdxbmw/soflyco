@@ -112,14 +112,14 @@
                                 <div class="thumbnail">
                                     ${{ '%0.2f' % itinerary.paid|float }} 
                                 </div>
-                                <div class="text-muted">Amount Paid</div>
+                                <div class="text-muted">Originally Paid</div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-3 hidden">
                                 <div class="thumbnail">
                                     {{ itinerary.claims|length }}
                                 </div>
-                                <div class="text-muted">Claims Made</div>
+                                <div class="text-muted">Number of Refunds</div>
                             </div>     
 
                             <div class="col-md-3">
@@ -127,7 +127,18 @@
                                     ${{ '%0.2f' % itinerary.refunded|default(0)|float|abs }}
                                 </div>
                                 <div class="text-muted">Amount Refunded</div>
-                            </div>                                                    
+                            </div> 
+
+                            <div class="col-md-3">
+                                <div class="thumbnail">
+                                    {% if itinerary.claims|length %}
+                                        ${{ '%0.2f' % itinerary.claims[-1].price|default(0)|float|abs }}
+                                    {% else %}
+                                        $0.00
+                                    {% endif %}
+                                </div>
+                                <div class="text-muted">Total Paid</div>
+                            </div>                                                                                
                         </div>                        
                     </div>
                 </div> 

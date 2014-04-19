@@ -177,12 +177,13 @@ $(function() {
             doSearch = true;    
         });
 
-    // catch 403 forbiddens
+    // catch aborts
     $(document).ajaxError(function(event, request, settings) {
-        if (request.status === 401)
-            $('#login-modal').modal('show');
-        else if (request.status === 403)
+        if (request.status === 401) {
+            window.location.href = '/users/login/?url=' + encodeURIComponent(window.location.href);
+        } else if (request.status === 403) {
             console.log('unverified');
+        }
     });
 
     // fade-in

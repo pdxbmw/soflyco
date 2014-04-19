@@ -28,7 +28,8 @@ def airports():
 @module.route('/reservation')
 def reservation():
     if not session.get('reservation'):
-        session['reservation'] = {'name':'','code':''}
+        session['reservation'] = {}
+    print session['reservation']
     return render_template('search/search.html', reservation=True)      
 
 @module.route('/select')
