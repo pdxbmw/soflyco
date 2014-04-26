@@ -6,17 +6,11 @@ body {
   margin-bottom: 60px;
 }
 #footer {
-  background-color: #f5f5f5;
-  bottom: 0;
-  padding: 20px 0 10px;
   position: absolute;
-  vertical-align: middle;
+  bottom: 0;
   width: 100%;
-}
-#footer li:not(:first-child):before {
-  content: '\00B7';
-  margin: 0 10px 0 0;
-  color: #ccc;
+  height: 60px;
+  background-color: #f5f5f5;
 }
 section > .inset {
   text-align: center;

@@ -2,8 +2,9 @@ from flask_assets import Environment, Bundle
 
 
 #: application css bundle
-css_sofly = Bundle("less/variables.less",
-                   "less/bootswatch.less",
+css_sofly = Bundle(#"less/variables.less",
+                   #"less/bootstrap.less",
+                   #"less/bootswatch.less",
                    "less/style.less",
                     filters="less", output="css/style.css",
                     debug=False)
