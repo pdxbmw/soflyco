@@ -50,6 +50,7 @@ def create_app(config_name):
     register_blueprints(app)
 
     # debug toolbar
+    """
     app.config['DEBUG_TB_PROFILER_ENABLED'] = True
     app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
     app.config['DEBUG_TB_TEMPLATE_EDITOR_ENABLED'] = True
@@ -66,6 +67,7 @@ def create_app(config_name):
                 'flask.ext.mongoengine.panels.MongoDebugPanel'
             )
     toolbar = DebugToolbarExtension(app)    
+    """
 
     @app.before_request
     def before_request():    
