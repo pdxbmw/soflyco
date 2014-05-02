@@ -6,10 +6,14 @@ import json
 module = Blueprint('filters', __name__)
 
 # Globals
+@module.app_template_global('policylink')
+def policylink(text):
+    return Markup('<a href="http://www.alaskaair.com/content/deals/special-offers/price-guarantee.aspx">%s</a>' % text)
+
+
 @module.app_template_global('tagline')
 def tagline():
-    return Markup('Get the lowest price on your\
-        <a href="http://www.alaskaair.com/content/deals/special-offers/price-guarantee.aspx">Alaska Airline</a> flights')
+    return Markup('Get the lowest price on your ' + policylink('Alaska Airlines') + 'flights')
 
 # Filters
 @module.app_template_filter('apnumber')

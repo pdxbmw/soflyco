@@ -307,9 +307,9 @@ class Reservation(Itinerary):
             current_app.logger.error(e)
 
     def check_for_schedule_change(self):
-        if 'Confirm Your Schedule Change' in self.html:
+        if 'Confirm Your Schedule Change' in self.html.html():
             raise FlashMessage("Your schedule has changed and needs to be confirmed before proceeding.<br> \
-                <a href='%s' target='_blank'>Click here to confirm your schedule change on alaskaair.com</a>"\
+                <a href='%s' target='_blank'>Click here to confirm your schedule change on alaskaair.com.</a>"\
                 % URLS.lookup_reservation, category='warning')  
         else:
             return False                         
@@ -360,8 +360,8 @@ class Reservation(Itinerary):
         junk = re.compile(r'[\n\r\t]')        
         self.html = pq(junk.sub('', content))
 
-        self.set_travel_dates()
         self.check_for_schedule_change()
+        self.set_travel_dates()
         self.check_for_discount_code()
         self.build_itinerary()
         self.set_search_params()

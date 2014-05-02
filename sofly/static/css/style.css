@@ -25,6 +25,7 @@ body {
   color: #ccc;
 }
 section > .inset {
+  padding: 10px;
   text-align: center;
   margin: 40px auto 60px;
   text-transform: uppercase;

@@ -1,3 +1,5 @@
+@import "variables.less";
+
 html {
     position: relative;
     min-height: 100%;
@@ -26,10 +28,13 @@ body {
 }
 section {
     & > .inset {
+        //background: @gray-lighter;
+        padding: 10px;
         text-align: center;
         margin: 40px auto 60px;
         text-transform: uppercase;
         color: #222;
+
     }
 }
 input[type="submit"], button {
