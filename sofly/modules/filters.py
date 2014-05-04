@@ -13,7 +13,7 @@ def policylink(text):
 
 @module.app_template_global('tagline')
 def tagline():
-    return Markup('Get the lowest price on your ' + policylink('Alaska Airlines') + 'flights')
+    return Markup('Get the lowest price on your ' + policylink('Alaska Airlines') + ' flights')
 
 # Filters
 @module.app_template_filter('apnumber')
