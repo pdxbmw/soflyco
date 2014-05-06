@@ -103,7 +103,7 @@ def login():
             else:
                 flash('Welcome back, %s!' % user.first_name, 'success')
             session['user_id'] = user.id
-            return redirect(request.args.get('url') or url_for('users.home', url=url))
+            return redirect(request.args.get('url') or url_for('users.home'))
         flash('Wrong email or password', 'danger')
     template = '_login' if is_ajax(request) else 'login'
     return render_template('users/%s.html' % template, form=form)
