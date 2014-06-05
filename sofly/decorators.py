@@ -9,7 +9,7 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if g.user is None:
-            if is_ajax:
+            if is_ajax(request):
                 abort(401)
             else:
                 flash(u'You need to be signed in for this page.', 'warning')

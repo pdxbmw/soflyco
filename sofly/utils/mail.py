@@ -55,6 +55,14 @@ class MailUtils(object):
         self.send_email(user.email, 'Welcome to SoFly!', html)
         return url
 
+    def send_basic_email(self, user=None, **kwargs):
+        from sofly import helpers
+        #user = user or g.user
+        #url = helpers.get_activation_link(user.id) 
+        html = self.render_template('email/basic.html', {})
+        self.send_email('pdxbmw@gmail.com', 'Welcome to SoFly!', html)
+        return url        
+
     def send_email(self, to_email, subject, body, **kwargs):
         from_email = kwargs.get('from_email', 'SoFly! <admin@sofly.co>')
         text = self.create_email_MIME(from_email, to_email, subject, body)
