@@ -8,7 +8,8 @@ class Price(db.EmbeddedDocument):
     price = db.DecimalField(precision=2)
 
 class Watcher(db.EmbeddedDocument):
-    email = db.EmailField()
+    email = db.EmailField(unique=True)
+    watching = db.BooleanField()
     reservation = db.DictField()
     claims = db.ListField(db.EmbeddedDocumentField(Price))
 
@@ -32,17 +33,22 @@ class Watch(db.Document):
         return super(Watch, self).save(*args, **kwargs)
     '''
 
+    ### THESE DON'T WORK
     def add_claim(self, email, paid):
         return self.filter(watchers__email=email).update_one(add_to_set__watchers__S__claims=Price(price=paid))
 
     def get_claims(self, email):
         return [watcher.claim for watcher in self.watchers if watcher.email == email]
 
+    def unwatch(self, email):
+        return self.filter(watchers__email=email).update_one(set__watchers__S__watching=False)
+
     def update_price(self, price):
         if round(self.prices[-1].price,) != round(float(price)):
             new_price = Price(price=price)  
             self.updated = datetime.datetime.now()
             self.update(add_to_set__prices=new_price)   
+    ###
 
     meta = {
             'allow_inheritance': True,

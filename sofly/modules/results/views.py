@@ -52,6 +52,24 @@ def reservation():
         #session.pop('reservation')
     return response 
 
+@module.route('/unwatch', methods=['POST'])
+@login_required
+@verified_required
+def unwatch():
+    response = 'failed'
+    if g.user:
+        # setup document
+        identifier = request.form.get('id')
+        # create or update document
+        doc = Watch.objects(identifier=identifier, watchers__email=g.user.email).update_one(set__watchers__S__watching=False)
+        response = 'success' if unwatch else 'error'
+        # email user    
+        email = g.user.email
+        itinerary = alaskaUtils.itinerary_from_identifier(identifier)
+        body = mail.watching_template(request, itinerary)
+        #mail.send_email(g.user.email, 'Fare Alert Removed', body)   
+    return jsonify(status=response)  
+
 @module.route('/watch', methods=['POST'])
 @login_required
 @verified_required
@@ -64,6 +82,7 @@ def watch():
         price = Price(price=request.form.get('price'))
         watcher = Watcher(
             email = g.user.email,
+            watching = True,
             reservation = dict(
                 code = request.form.get('code'),
                 name = request.form.get('name'),
@@ -73,7 +92,11 @@ def watch():
         # create or update document
         watch = Watch.objects(identifier=identifier).first()
         if watch:
-            watch.update(add_to_set__prices=price, add_to_set__watchers=watcher)
+            # inefficient way to check if user previously unwatched
+            # really shouldn't do it this way
+            rewatch = Watch.objects(identifier=identifier, watchers__email=g.user.email).update_one(set__watchers__S__watching=True)
+            if not rewatch:
+                watch.update(add_to_set__prices=price, add_to_set__watchers=watcher)
         else:
             watch = Watch(
                 expires = datetime.datetime.strptime(search_params.get('DepartureDate1'),'%m/%d/%Y'),

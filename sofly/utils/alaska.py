@@ -183,6 +183,7 @@ class Itinerary(object):
             flight.numbers = get_numbers(item[35:])
             flight.stops = item[34:35]
             flight.connections = get_connections(item[35:])
+            flight.identifier = item
 
         return self
 

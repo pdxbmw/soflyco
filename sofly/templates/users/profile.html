@@ -84,13 +84,14 @@
             <h3 class="inset">Currently Watching</h3>
 
             {% for itinerary in itineraries %}
+                {% if itinerary.watching %}
                 <div class="watching">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3>
-                                {{ itinerary.flights[0].depart.strftime('%b %d') }}
-                                <i class="">-</i>
-                                {{ itinerary.flights[-1].depart.strftime('%b %d') }}
+                                {{ itinerary.flights[0].depart.strftime('%m/%d') }}
+                                <i class=""> to </i>
+                                {{ itinerary.flights[-1].depart.strftime('%m/%d') }}
                             </h3>
                         </div>
                         <div class="panel-body table-responsive">
@@ -142,7 +143,7 @@
                                         {% if itinerary.claims|length %}
                                             ${{ '%0.2f' % itinerary.claims[-1].price|default(0)|float|abs }}
                                         {% else %}
-                                            $0.00
+                                            ${{ '%0.2f' % itinerary.paid|float }} 
                                         {% endif %}
                                     </div>
                                     <div class="text-muted">Total Paid</div>
@@ -152,14 +153,51 @@
                         </div>                    
                     </div> 
 
-                    <div class="text-right ">
-                        <button class="btn btn-danger unwatch-fare btn-lg" data-loading-text="Submitting...">Unwatch</button>            
-                    </div>            
-                </div>                        
+                    {% with watching = itinerary.watching %}
+                    <div class="text-right">
+                        <button class="btn btn-lg {% if watching %}btn-danger unwatch-fare{% else %}btn-success watch-fare{% endif %}" data-loading-text="Submitting...">
+                            {% if watching %}Unwatch{% else %}Watch{% endif %} Price
+                        </button>            
+                    </div>         
+                    {% endwith %}   
+                </div>  
+                {% endif %}                      
             {% endfor %}
 
         </section>
 
     </div>
 
+{% endblock %}
+
+{% block footer_scripts %}
+    <script>
+        $('.watching').on('click', '.unwatch-fare', function() {
+            var $this = $(this),
+                $parent = $this.closest('.watching');
+
+            // get ids
+            var id = [];
+            $parent.find('.table-selection tr').each(function() {
+                id.push($(this).data('identifier'));
+            });
+
+            $this.button('loading');
+
+            $.post('/results/unwatch', {id: id.join('|')})
+                .always(function(resp) {
+                    $this.attr('disabled','disabled');
+                })
+                .done(function(response) {
+                    $('<i />', { class: 'glyphicon glyphicon-ok left-buffer'})
+                        .appendTo($this.text(toTitleCase(response.status)));
+                })
+                .fail(function(xhr, textStatus, errorThrown) {
+                    console.log(xhr);
+                    $('<i />', { class: 'glyphicon glyphicon-remove left-buffer'})
+                        .appendTo($this.addClass('btn-danger')
+                            .text(toTitleCase($.parseJSON(xhr.responseText).status)));
+                });
+        });
+    </script>
 {% endblock %}

@@ -42,6 +42,7 @@ def home():
             if watcher.email == g.user.email:
                 itinerary.claims = watcher.claims
                 itinerary.paid = watcher.reservation['paid']
+                itinerary.watching = watcher.watching
                 claims += len(watcher.claims)
                 if len(watcher.claims):
                     refunded += float(watcher.reservation['paid']) - \

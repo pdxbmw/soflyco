@@ -168,6 +168,10 @@ class MongoUtils(object):
         flash("There was a problem logging you in.", category='danger')        
         return False
 
+    def unwatch(self, request):
+        form = request.form
+        self.log.debug(request.GET.get('id'))
+
     def watch(self, request):
         try:
             coll = self.collection('watching')
