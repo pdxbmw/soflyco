@@ -97,12 +97,15 @@ class MailUtils(object):
         else:
             print "Error. No fare alert sent."    
 
-    def watching_template(self, request, itinerary):
+    def watching_template(self, request, itinerary, email):
+        from sofly.helpers import get_unwatch_link
+        unwatch_link = get_unwatch_link(itinerary.identifier, email)
         itinerary.price = request.form.get('price')
         context = dict(
             itinerary = itinerary, 
             reservation = dict(
                 paid = request.form.get('paid')
-            )
+            ),
+            unwatch_link = unwatch_link
         )
         return self.render_template('email/watching.html', context)                

@@ -52,6 +52,19 @@ def reservation():
         #session.pop('reservation')
     return response 
 
+@module.route('/unwatch/<payload>', methods=['GET'])
+def unwatch_from_email(payload):
+    from sofly.helpers import redirect_url
+    s = security.get_serializer()
+    try:
+        (identifier, email) = s.loads(payload)
+        print (identifier, email)
+    except BadSignature:
+        abort(404)
+    Watch.objects(identifier=identifier, watchers__email=email).update_one(set__watchers__S__watching=False)
+    flash("You have been unsubscribed from any future price alerts on that flight.", 'warning')
+    return redirect(redirect_url())
+
 @module.route('/unwatch', methods=['POST'])
 @login_required
 @verified_required
@@ -109,7 +122,7 @@ def watch():
         # email user    
         email = g.user.email
         itinerary = alaskaUtils.itinerary_from_identifier(request.form['id'])
-        body = mail.watching_template(request, itinerary)
+        body = mail.watching_template(request, itinerary, g.user.email)
         mail.send_email(g.user.email, 'Fare Alert Added', body)   
         response = 'success'
     return jsonify(status=response)    

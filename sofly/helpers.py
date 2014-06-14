@@ -50,6 +50,12 @@ def get_claim_link(identifier, email, price):
     payload = s.dumps((identifier, email, price))
     return _get_link(route='results.claim', payload=payload)
 
+def get_unwatch_link(identifier, email):    
+    from sofly import security
+    s = security.get_serializer()
+    payload = s.dumps((identifier, email))
+    return _get_link(route='results.unwatch_from_email', payload=payload)    
+
 def load_json_file(filename):
     basedir = os.path.abspath(os.path.dirname(__file__))
     f = open(os.path.join(basedir, 'static/json/%s.json' % filename))
