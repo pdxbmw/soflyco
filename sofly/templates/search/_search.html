@@ -3,7 +3,7 @@
 
         {#<h3 class="inset">Please enter your information</h3>#}
         {% if reservation %}
-            <form id="ticket_lookup" class="top-buffer" action="{{ url_for('results.reservation') }}" method="post" role="form">
+            <form id="ticket_lookup" class="col-md-8 col-md-offset-2 top-buffer" action="{{ url_for('results.reservation') }}" method="post" role="form">
                 <fieldset class="well">
                     <div class="form-group form-inline top-buffer"> 
                         <label class="sr-only" for="name">Traveler's Last Name</label>
