@@ -5,6 +5,12 @@
             <li class="hidden"><a href="{{ url_for('base.page', page='about') }}">About</a></li>
             <li><a href="{{ url_for('base.page', page='privacy') }}">Privacy</a></li>
             <li><a href="{{ url_for('base.page', page='terms') }}">Terms</a></li>
+            {% if g.user %}
+                <li><a href="{{ url_for('users.logout') }}">Logout</a></li>
+            {% else %}
+                <li><a href="{{ url_for('users.register') }}">Register</a></li>
+                <li><a href="{{ url_for('users.login') }}">Login</a></li>
+            {% endif %}
         </ul>
     </div>                
 </footer>
