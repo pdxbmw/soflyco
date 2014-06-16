@@ -39,7 +39,7 @@ PermitRootLogin without-password
 cd /var/lib/dokku/plugins
 
 # mongodb
-# - https://github.com/jeffutter/dokku-mongodb-plugin
+# - https://github.com/jeffutter/dokku-mongodb-plugin 
 git clone https://github.com/jeffutter/dokku-mongodb-plugin.git /var/lib/dokku/plugins/mongodb
 
 # memcached
