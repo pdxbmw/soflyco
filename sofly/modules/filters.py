@@ -67,11 +67,11 @@ def no_stops(arg):
     return out
 
 @module.app_template_filter('pluralize')
-def pluralize(arg):
-    out = ''
+def pluralize(number, singular='', plural='s'):
+    out = singular
     try:
-        if len(arg) != 1:
-            out = 's' 
+        if int(number) != 1:
+            out = plural
     except:
         pass
     return out

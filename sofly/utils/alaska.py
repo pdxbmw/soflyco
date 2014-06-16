@@ -245,6 +245,10 @@ class Reservation(Itinerary):
             node = element.find('td').filter(lambda i: string in pq(this).text().lower()).text()
             return re.search("^.*\((.*)\).*$", node).group(1)[:3]
 
+        def get_cabin():
+            text = self.html('.flightstable > tr').eq((index * 3)-1).text().lower()   
+            return 'first' if re.match("^.*first.\(.\).*$", text) else 'coach'
+
         def get_datetime(element, index):
             date = element.find('.FlightTimeContainer').text().split()
             # Trying lookup by abbreviated date
@@ -257,13 +261,9 @@ class Reservation(Itinerary):
             year = [i.split('-')[0] for i in self.travel_dates if int(i.split('-')[1]) == month][0]
             return datetime.datetime(int(year), int(month), int(date[4]), int(twenty_four[0]), int(twenty_four[1]))
 
-        def get_cabin():
-            text = self.html('.flightstable > tr').eq((index * 3)-1).text().lower()   
-            return 'first' if re.match("^.*first.\(.\).*$", text) else 'coach'
-
         def get_duration(text):
             match = re.search('duration:(.*) ours (.*) inutes', text)
-            return '{hours:02d}{minutes:02d}'.format(hours=int(match.group(1)[:-1]), minutes=int(match.group(2)[:-1]))           
+            return '{hours:02d}{minutes:02d}'.format(hours=int(match.group(1)[:-1]), minutes=int(match.group(2)[:-1]))     
 
         def get_stops(text):
             # 
@@ -363,10 +363,15 @@ class Reservation(Itinerary):
 
         self.check_for_schedule_change()
         self.set_travel_dates()
-        self.check_for_discount_code()
+        self.set_num_travelers()
+        self.check_for_discount_code()        
         self.build_itinerary()
         self.set_search_params()
         self.set_payment_method()
+
+    def set_num_travelers(self):
+        text = self.html('.totalPriceDiv > div > h4').text().split()
+        self.num_travelers = text[3]
 
     def set_payment_method(self):
         text = self.html('#divFareAndTaxes > div:first > .amount').text().lower().replace(',','')
@@ -384,7 +389,8 @@ class Reservation(Itinerary):
         if not len(self.flights):
             self.abort()
             
-        self.search_params['CabinType'] = self.flights[0].cabin        
+        self.search_params['CabinType'] = self.flights[0].cabin    
+        self.search_params['AdultCount'] = self.num_travelers
 
         if self.is_one_way:
             self.search_params['IsOneWay'] = 'true'
@@ -575,7 +581,6 @@ class Search(object):
                         #set_duration(flight, first_column)
                         set_flight_price(flight, row)
                         set_reservation_price(flight)   
-                        #print flight.price
                         identifiers.append(flight.identifier)
                         flight.duplicate = any(flight.identifier == x[self.index] for x in id_list)
                         itinerary = self.add_itinerary(itinerary)  
@@ -640,11 +645,11 @@ class Search(object):
     def fetch(self, search_params=None):
         
         try:
-            
             self.search_params = search_params or self.get_search_params()
 
             self.search_params_encoded = security.json_encrypt(self.search_params)
             self.cabin = self.search_params['CabinType'].lower()
+            self.num_travelers = self.search_params['AdultCount'][:1]
             self.build_airport_list()
 
             current_app.logger.debug(self.search_params)
@@ -701,7 +706,7 @@ class Search(object):
     def get_search_params(self):
         try:
             params = self.reservation.search_params if self.reservation else self.request.form
-            allowed_params = ['IsRoundTrip','IsOneWay','IsMultiCity','ReturnDate','CabinType','flightType']
+            allowed_params = ['IsRoundTrip','IsOneWay','IsMultiCity','ReturnDate','CabinType','flightType','AdultCount','ChildrenCount']
             allowed_params.extend([param + str(index + 1) for index in range(4) for param in ['DepartureCity','DepartureDate','ArrivalCity']])
             print params
             return {key: params[key] for key in params if key in allowed_params}
