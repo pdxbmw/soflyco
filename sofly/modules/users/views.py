@@ -29,6 +29,10 @@ def before_request():
 def log():
     return redirect(url_for('results.reservation')) 
 
+@module.route('/refund/')
+def refund():
+    return render_template('users/refund.html')
+
 @module.route('/me/')
 @login_required
 def home():

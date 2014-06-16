@@ -88,6 +88,9 @@ $('#results').on('click', '.watch-fare', function() {
                     .appendTo($this.addClass('btn-danger')
                         .text(toTitleCase($.parseJSON(xhr.responseText).status)));
             });
+
+        if ($this.hasClass('get-refund'))
+            window.open(REFUND_URL, '_blank');
     });
 
 /* 

@@ -87,7 +87,12 @@
                     </div>
                     {% if not miles %}
                     <div class="text-right">
-                        <button class="btn btn-success watch-fare btn-lg" data-loading-text="Submitting...">Watch Price</button>            
+                        <button class="btn btn-success watch-fare btn-lg {% if paid_more %}get-refund{% endif %}" data-loading-text="Submitting...">
+                            {% if paid_more %}
+                                Get Refund and
+                            {% endif %}
+                            Watch Price
+                        </button>            
                     </div>          
                     {% endif %}               
                 </div>

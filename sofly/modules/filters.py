@@ -10,6 +10,9 @@ module = Blueprint('filters', __name__)
 def policylink(text):
     return Markup('<a href="http://www.alaskaair.com/content/deals/special-offers/price-guarantee.aspx">%s</a>' % text)
 
+@module.app_template_global('refundurl')
+def refundurl():
+    return Markup('https://www.alaskaair.com/booking/ssl/garr/GuaranteedAirfare.aspx')  
 
 @module.app_template_global('tagline')
 def tagline():
