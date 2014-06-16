@@ -3,7 +3,7 @@
 {% block head_styles %}
     <style>
         article section {
-            margin: 60px 0;
+            margin: 40px 0 0;
         }
 
         article section .row {
@@ -40,6 +40,14 @@
             
             <h3 class="inset">How It Works</h3>
 
+            <div class="row jumbotron">
+                SoFly! monitors the price of Alaska Airlines flights so you get 
+                {{ policylink('the lowest price') }}. If the price of your flight 
+                drops at any time before your departure, SoFly! will notify you 
+                and help you claim a refund. SoFly! is the only fare tracker tailored 
+                to Alaska Airlines. 
+            </div>            
+
             <div class="row">        
                 <div class="col-md-4">
                     <div class="thumbnail">
@@ -70,14 +78,6 @@
                         You'll get credit towards future flights. That's it!
                     </div>
                 </div>
-            </div>
-
-            <div class="row jumbotron">
-                SoFly! monitors the price of Alaska Airlines flights so you get 
-                {{ policylink('the lowest price') }}. If the price of your flight 
-                drops at any time before your departure, SoFly! will notify you 
-                and help you claim a refund. SoFly! is the only fare tracker tailored 
-                to Alaska Airlines. 
             </div>
 
             <div class="row text-center">
