@@ -9,7 +9,7 @@
     {% set paid_more = paid > current_price %}
 {% endif %}
 
-<article id="results" class="top-buffer" data-search="{{ results.search_params_encoded }}" {% if reservation %}data-paid="{{ reservation.paid|float + reservation.discount }}" data-name="{{ reservation.last_name }}" data-code="{{ reservation.ticket_code }}"{% endif %}>
+<article id="results" class="top-buffer" data-search="{{ results.search_params_encoded }}" {% if reservation %}data-paid="{{ reservation.paid|float + reservation.discount }}" data-name="{{ reservation.last_name }}" data-code="{{ reservation.ticket_code }}"{% endif %} data-travelers="{{ reservation.num_travelers }}">
     <div class="text-center center-block loading-spinner {% if not reservation %}hidden{% endif %}">
         <i class="fa fa-spinner fa-spin text-muted" style="font-size:76px"></i>
     </div>

@@ -173,6 +173,10 @@ class Itinerary(object):
 
         for item in identifiers.split('|'):
 
+            if len(item) == 1:
+                self.num_travelers = item
+                break
+
             flight = self.add_flight( 
                 origin = item[0:3],
                 destination = item[15:18],
@@ -189,7 +193,7 @@ class Itinerary(object):
 
     @property
     def identifier(self):
-        return '|'.join([flight.identifier for flight in self.flights])
+        return '%s|%s' % ('|'.join([flight.identifier for flight in self.flights]), self.num_travelers)
 
     @property
     def num_flights(self):

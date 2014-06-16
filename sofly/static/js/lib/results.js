@@ -64,7 +64,7 @@ $('#results').on('click', '.watch-fare', function() {
         var d = $('#results').data(),
             data = {
                 code      : d.code,
-                id        : id.join('|'),
+                id        : id.join('|') + '|' + d.travelers,
                 name      : d.name,                   
                 paid      : d.paid || d.price,
                 price     : d.price,
