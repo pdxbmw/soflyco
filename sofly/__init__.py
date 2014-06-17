@@ -32,7 +32,7 @@ def create_app(config_name):
     app.config.from_object(config[config_name])
     #app.wsgi_app = MethodRewriteMiddleware(app.wsgi_app)
     app.wsgi_app = ProxyFix(app.wsgi_app)    
-    app.url_map.default_subdomain = 'www'
+    #app.url_map.default_subdomain = 'www'
 
     syslog_handler = SysLogHandler()
     syslog_handler.setLevel(logging.DEBUG)
