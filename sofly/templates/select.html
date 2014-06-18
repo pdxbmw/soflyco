@@ -1,22 +1,6 @@
 {% extends 'base.html' %}
 
 {% block head_styles %}
-    <style>
-        .thumbnail {
-            border: 0;
-            padding: 15px;
-        }
-        .thumbnail:hover {
-            background: #f9f9f9;
-        }
-        a:hover {
-            text-decoration: none;
-        }
-        i {
-            font-size: 48px;
-            margin-bottom: 0px;
-        }
-    </style>
 {% endblock head_styles %}
 
 {% block masthead %}
@@ -27,10 +11,8 @@
 {% endblock masthead %}
 
 {% block content %}
-    <article class="container">
-
+    <article id="select" class="container">
         <section class="row top-buffer text-center">
-            
             <h3 class="inset hidden"></h3>
             
             <div class="col-md-offset-1 row">
@@ -68,6 +50,5 @@
             </div>
             
         </section>
-
     </article>
 {% endblock content %}

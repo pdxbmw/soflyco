@@ -3,7 +3,7 @@ html {
   min-height: 100%;
 }
 body {
-  margin-bottom: 20px;
+  margin-bottom: 60px;
 }
 .navbar-toggle {
   background-color: #eee;
@@ -27,7 +27,7 @@ body {
 section > .inset {
   padding: 10px;
   text-align: center;
-  margin: 20px auto 40px;
+  margin: 40px auto 60px;
   text-transform: uppercase;
   color: #222;
 }
@@ -64,6 +64,20 @@ button {
 #results table th {
   cursor: pointer;
   text-align: center;
+}
+#select .thumbnail {
+  border: 0;
+  padding: 15px;
+}
+#select .thumbnail:hover {
+  background: #f9f9f9;
+}
+#select a:hover {
+  text-decoration: none;
+}
+#select i {
+  font-size: 48px;
+  margin-bottom: 0px;
 }
 .popup-table table th,
 .popup-table table td {
