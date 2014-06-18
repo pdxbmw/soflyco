@@ -1,7 +1,7 @@
 {% macro render_field(field) %}
     <div class="form-group {% if field.errors %}has-error{% endif %}">
-        {{ field.label(class="control-label col-md-3") }}
-        <div class="col-md-7">
+        {{ field.label(class="control-label col-md-4") }}
+        <div class="col-md-8">
             {{ field(**kwargs) }}    
             {% if field.errors %}
                 <ul class="errors list-unstyled">

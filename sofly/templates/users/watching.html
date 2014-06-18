@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block head_styles %}
+    <style>
+        body {
+            font-weight: 300;
+        }
+        #total_stats .thumbnail {
+            border: 0 none;
+            box-shadow: none;
+            background: #f3f3f3;
+            color: #444;
+            font-size: 36px;
+            line-height: 96px;
+        }
+        .itinerary-stats .thumbnail {
+            margin-bottom: 5px;
+        }
+        #currently_watching .watching {
+            margin-top: 10px;
+        }
+        .unwatch-fare {
+            margin-bottom: 30px;
+            
+        }
+    </style>
+{% endblock %}
+
+{% block masthead %}
+    <h1>Flights Watched</h1>
+    <span class="text-muted"></span> 
+{% endblock masthead %}
+
+{% block content %}
+    <div class="">
+        
+        {% if not user.verified %}
+        <p class="bs-callout bs-callout-danger">
+            Your email address has not been verified. 
+            <a href="{{ url_for('users.activation_email') }}">Click here to resend the verification email</a>
+        </p>
+        {% endif %}
+
+        <section id="total_stats" class="row top-buffer text-center">
+            
+            <h3 class="inset">Your stats</h3>
+
+            <div class="row">        
+                <div class="col-md-4 bottom-buffer">
+                    <div class="thumbnail">
+                        {{ watching|length|default(0) }}
+                    </div>
+                    Flights Watched
+                    <div class="text-muted">
+                        Total number of flights we've watched for you.
+                    </div>
+                </div>
+                
+                <div class="col-md-4 bottom-buffer">
+                    <div class="thumbnail">
+                        {{ claims|default(0) }}
+                    </div>
+                    Refunds Claimed
+                    <div class="text-muted">
+                        Total number of refund claims you've made.
+                    </div>
+                </div>
+                
+                <div class="col-md-4 bottom-buffer">
+                    <div class="thumbnail">
+                        ${{ refunded|default(0)|abs }}
+                    </div>
+                    Amount Refunded
+                    <div class="text-muted">
+                        Total amount of money you've saved.
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <section id="currently_watching" class="row top-buffer text-center">
+            
+            <h3 class="inset">Currently Watching</h3>
+
+            {% for itinerary in itineraries %}
+                {% if itinerary.watching %}
+                <div class="watching">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3>
+                                {{ itinerary.flights[0].depart.strftime('%m/%d') }}
+                                {% if itinerary.flights|length > 1 %}
+                                    <i class=""> to </i>
+                                    {{ itinerary.flights[-1].depart.strftime('%m/%d') }}
+                                {% endif %}
+                            </h3>
+                        </div>
+                        <div class="panel-body table-responsive">
+                            <table class="table table-striped table-hover table-selection sortable">
+                                {% with show_date = 1 %}
+                                    {% include 'results/_tbody.html' %}       
+                                {% endwith %}
+                            </table>
+                        </div>
+                        <div class="panel-footer text-center">
+                            {% if False %}
+                                Currently ${{ itinerary.price }}. 
+                                You paid ${{ '%0.2f' % itinerary.paid|float }} 
+                                and have made {{ itinerary.claims|length|apnumber|no_for_zero }} claim{{ itinerary.claims|pluralize }}
+                                for ${{ '%0.2f' % itinerary.refunded|default(0)|float }} in refunds.
+                            {% endif  %}
+
+                            <div class="row itinerary-stats">        
+                                <div class="col-md-3">
+                                    <div class="thumbnail">
+                                        ${{ itinerary.price }}
+                                    </div>
+                                    <div class="text-muted">Current Price</div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="thumbnail">
+                                        ${{ '%0.2f' % itinerary.paid|float }} 
+                                    </div>
+                                    <div class="text-muted">Originally Paid</div>
+                                </div>
+
+                                <div class="col-md-3 hidden">
+                                    <div class="thumbnail">
+                                        {{ itinerary.claims|length }}
+                                    </div>
+                                    <div class="text-muted">Number of Refunds</div>
+                                </div>     
+
+                                <div class="col-md-3">
+                                    <div class="thumbnail">
+                                        ${{ '%0.2f' % itinerary.refunded|default(0)|float|abs }}
+                                    </div>
+                                    <div class="text-muted">Amount Refunded</div>
+                                </div> 
+
+                                <div class="col-md-3">
+                                    <div class="thumbnail">
+                                        {% if itinerary.claims|length %}
+                                            ${{ '%0.2f' % itinerary.claims[-1].price|default(0)|float|abs }}
+                                        {% else %}
+                                            ${{ '%0.2f' % itinerary.paid|float }} 
+                                        {% endif %}
+                                    </div>
+                                    <div class="text-muted">Total Paid</div>
+                                </div>                                                                        
+                              
+                            </div>                        
+                        </div>                    
+                    </div> 
+
+                    {% with watching = itinerary.watching %}
+                    <div class="text-right">
+                        <button class="btn btn-lg {% if watching %}btn-danger unwatch-fare{% else %}btn-success watch-fare{% endif %}" data-loading-text="Submitting...">
+                            {% if watching %}Unwatch{% else %}Watch{% endif %} Price
+                        </button>            
+                    </div>         
+                    {% endwith %}   
+                </div>  
+                {% endif %}                      
+            {% endfor %}
+
+        </section>
+
+    </div>
+
+{% endblock %}
+
+{% block footer_scripts %}
+    <script>
+        $('.watching').on('click', '.unwatch-fare', function() {
+            var $this = $(this),
+                $parent = $this.closest('.watching');
+
+            // get ids
+            var id = [];
+            $parent.find('.table-selection tr').each(function() {
+                id.push($(this).data('identifier'));
+            });
+
+            $this.button('loading');
+
+            $.post('/results/unwatch', {id: id.join('|')})
+                .always(function(resp) {
+                    $this.attr('disabled','disabled');
+                })
+                .done(function(response) {
+                    $('<i />', { class: 'glyphicon glyphicon-ok left-buffer'})
+                        .appendTo($this.text(toTitleCase(response.status)));
+                })
+                .fail(function(xhr, textStatus, errorThrown) {
+                    console.log(xhr);
+                    $('<i />', { class: 'glyphicon glyphicon-remove left-buffer'})
+                        .appendTo($this.addClass('btn-danger')
+                            .text(toTitleCase($.parseJSON(xhr.responseText).status)));
+                });
+        });
+    </script>
+{% endblock %}

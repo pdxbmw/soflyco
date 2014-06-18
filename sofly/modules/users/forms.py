@@ -17,3 +17,9 @@ class RegisterForm(Form):
             ])
     #accept_tos = BooleanField('I accept the TOS', [Required()])
     recaptcha = RecaptchaField()
+
+class UserForm(Form):
+    first_name = TextField('First name', [Required()])
+    last_name = TextField('Last name', [Required()])
+    email = TextField('Email address', [])
+    password = PasswordField('Password', [Required()])

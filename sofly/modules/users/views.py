@@ -1,4 +1,5 @@
-from flask import Blueprint, request, render_template, flash, g, session, redirect, url_for
+from flask import (Blueprint, request, render_template, flash,
+    g, session, redirect, url_for)
 
 from authomatic import Authomatic
 from authomatic.adapters import WerkzeugAdapter
@@ -6,10 +7,12 @@ from bson import ObjectId
 from itsdangerous import BadSignature
 from werkzeug import check_password_hash, generate_password_hash
 
+from config import config
+
 from sofly import db, mail, security
 from sofly.decorators import login_required
 from sofly.helpers import is_ajax
-from sofly.modules.users.forms import RegisterForm, LoginForm
+from sofly.modules.users.forms import RegisterForm, LoginForm, UserForm
 from sofly.modules.users.models import User
 from sofly.modules.results.models import Watch
 from sofly.utils.alaska import Itinerary
@@ -33,9 +36,9 @@ def log():
 def refund():
     return render_template('users/refund.html')
 
-@module.route('/me/')
+@module.route('/watching/')
 @login_required
-def home():
+def watching():
     watched = Watch.objects(watchers__email=g.user.email).no_dereference()
     claims, refunded = 0, 0
     itineraries = []
@@ -61,7 +64,26 @@ def home():
         itineraries = itineraries,
         watching = watched
     )
-    return render_template('users/profile.html', **context)
+    return render_template('users/watching.html', **context)
+
+@module.route('/profile/', methods=['GET', 'POST'])
+@login_required
+def home():
+    form = UserForm(request.form)
+    if form.validate_on_submit():
+        user = User.objects.get(id=ObjectId(session['user_id']))
+        if user and check_password_hash(user.password, form.password.data):
+            user.update(**{
+                'set__first_name': form.first_name.data, 
+                'set__last_name': form.last_name.data,
+                'set__email': user.email,
+                })
+            session['user_id'] = user.id
+            flash('Your profile has been updated.', 'success')
+            return redirect(url_for('users.home')) 
+        else:
+            flash('Incorrect password.', 'danger')
+    return render_template('users/profile.html', form=form)
 
 @module.route('/activate')
 @login_required

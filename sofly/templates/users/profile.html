@@ -32,141 +32,22 @@
 {% endblock masthead %}
 
 {% block content %}
-    <div class="">
-        
-        {% if not user.verified %}
-        <p class="bs-callout bs-callout-danger">
-            Your email address has not been verified. 
-            <a href="{{ url_for('users.activation_email') }}">Click here to resend the verification email</a>
-        </p>
-        {% endif %}
-
-        <section id="total_stats" class="row top-buffer text-center">
-            
-            <h3 class="inset">Your stats</h3>
-
-            <div class="row">        
-                <div class="col-md-4 bottom-buffer">
-                    <div class="thumbnail">
-                        {{ watching|length|default(0) }}
-                    </div>
-                    Flights Watched
-                    <div class="text-muted">
-                        Total number of flights we've watched for you.
-                    </div>
+    <section class="row top-buffer">
+        <div class="top-buffer col-md-8 col-md-offset-1">
+            {% from "forms/macros.html" import render_field %}
+            <form class="form-horizontal" method="post" action="." role="form">
+                {{ form.csrf_token }}
+                {{ render_field(form.first_name, class="form-control", value=g.user.first_name) }}
+                {{ render_field(form.last_name, class="form-control", value=g.user.last_name) }}
+                {{ render_field(form.email, class="form-control", value=g.user.email, disabled=disabled) }}
+                {{ render_field(form.password, class="form-control", label="Verify password") }}                
+                {#{ render_field(form.accept_tos, class="form-control") }#}
+                <div class="pull-right">
+                    <input type="submit" value="Submit" class="btn btn-success btn-lg top-buffer">
                 </div>
-                
-                <div class="col-md-4 bottom-buffer">
-                    <div class="thumbnail">
-                        {{ claims|default(0) }}
-                    </div>
-                    Refunds Claimed
-                    <div class="text-muted">
-                        Total number of refund claims you've made.
-                    </div>
-                </div>
-                
-                <div class="col-md-4 bottom-buffer">
-                    <div class="thumbnail">
-                        ${{ refunded|default(0)|abs }}
-                    </div>
-                    Amount Refunded
-                    <div class="text-muted">
-                        Total amount of money you've saved.
-                    </div>
-                </div>
-            </div>
-
-        </section>
-
-        <section id="currently_watching" class="row top-buffer text-center">
-            
-            <h3 class="inset">Currently Watching</h3>
-
-            {% for itinerary in itineraries %}
-                {% if itinerary.watching %}
-                <div class="watching">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3>
-                                {{ itinerary.flights[0].depart.strftime('%m/%d') }}
-                                <i class=""> to </i>
-                                {{ itinerary.flights[-1].depart.strftime('%m/%d') }}
-                            </h3>
-                        </div>
-                        <div class="panel-body table-responsive">
-                            <table class="table table-striped table-hover table-selection sortable">
-                                {% with show_date = 1 %}
-                                    {% include 'results/_tbody.html' %}       
-                                {% endwith %}
-                            </table>
-                        </div>
-                        <div class="panel-footer text-center">
-                            {% if False %}
-                                Currently ${{ itinerary.price }}. 
-                                You paid ${{ '%0.2f' % itinerary.paid|float }} 
-                                and have made {{ itinerary.claims|length|apnumber|no_for_zero }} claim{{ itinerary.claims|pluralize }}
-                                for ${{ '%0.2f' % itinerary.refunded|default(0)|float }} in refunds.
-                            {% endif  %}
-
-                            <div class="row itinerary-stats">        
-                                <div class="col-md-3">
-                                    <div class="thumbnail">
-                                        ${{ itinerary.price }}
-                                    </div>
-                                    <div class="text-muted">Current Price</div>
-                                </div>
-
-                                <div class="col-md-3">
-                                    <div class="thumbnail">
-                                        ${{ '%0.2f' % itinerary.paid|float }} 
-                                    </div>
-                                    <div class="text-muted">Originally Paid</div>
-                                </div>
-
-                                <div class="col-md-3 hidden">
-                                    <div class="thumbnail">
-                                        {{ itinerary.claims|length }}
-                                    </div>
-                                    <div class="text-muted">Number of Refunds</div>
-                                </div>     
-
-                                <div class="col-md-3">
-                                    <div class="thumbnail">
-                                        ${{ '%0.2f' % itinerary.refunded|default(0)|float|abs }}
-                                    </div>
-                                    <div class="text-muted">Amount Refunded</div>
-                                </div> 
-
-                                <div class="col-md-3">
-                                    <div class="thumbnail">
-                                        {% if itinerary.claims|length %}
-                                            ${{ '%0.2f' % itinerary.claims[-1].price|default(0)|float|abs }}
-                                        {% else %}
-                                            ${{ '%0.2f' % itinerary.paid|float }} 
-                                        {% endif %}
-                                    </div>
-                                    <div class="text-muted">Total Paid</div>
-                                </div>                                                                        
-                              
-                            </div>                        
-                        </div>                    
-                    </div> 
-
-                    {% with watching = itinerary.watching %}
-                    <div class="text-right">
-                        <button class="btn btn-lg {% if watching %}btn-danger unwatch-fare{% else %}btn-success watch-fare{% endif %}" data-loading-text="Submitting...">
-                            {% if watching %}Unwatch{% else %}Watch{% endif %} Price
-                        </button>            
-                    </div>         
-                    {% endwith %}   
-                </div>  
-                {% endif %}                      
-            {% endfor %}
-
-        </section>
-
-    </div>
+            </form>
+        </div>
+    </section>
 
 {% endblock %}
 

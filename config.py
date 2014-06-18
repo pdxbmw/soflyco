@@ -56,8 +56,8 @@ class Config:
     RECAPTCHA_PRIVATE_KEY = '6LdvVvASAAAAADuuvsxXEjTkaW3zYUmie9qoPHoF'
     RECAPTCHA_OPTIONS = {'theme': 'clean'}
 
-    #config = copy.deepcopy(Config.OAUTH2)
-    #config['__defaults__'] = Config.DEFAULTS    
+    config = copy.deepcopy(OAUTH2)
+    config['__defaults__'] = DEFAULTS    
 
 
 class DevelopmentConfig(Config):
