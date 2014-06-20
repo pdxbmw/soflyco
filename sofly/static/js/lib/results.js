@@ -72,7 +72,6 @@ $('#results').on('click', '.watch-fare', function() {
                 search    : d.search
             }
 
-        console.log(data);
         $this.button('loading');
 
         $.post('/results/watch', data)
@@ -91,7 +90,10 @@ $('#results').on('click', '.watch-fare', function() {
             });
 
         if ($this.hasClass('get-refund'))
-            window.open(REFUND_URL, '_blank');
+            window.open(
+                REFUND_URL, 
+                "Alaska_Airlines",
+                "height=500,width=500,menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes");
     });
 
 /* 
