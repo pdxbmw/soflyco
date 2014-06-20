@@ -100,8 +100,10 @@ def watch():
                 code = request.form.get('code'),
                 name = request.form.get('name'),
                 paid = request.form.get('paid')
-                )
+                ),
+            #claims = [price] if request.form.get('claim') else []
             )
+        #watch.update_one(add_to_set__watchers__S__claims=Price(price=price))
         # create or update document
         watch = Watch.objects(identifier=identifier).first()
         if watch:
@@ -120,10 +122,8 @@ def watch():
                 watchers = [watcher]
                 )
             watch.save()
-        print request.form.get('claim')
-        # this shoudl be added in above
         if request.form.get('claim'):
-            watch.update_one(add_to_set__watchers__S__claims=Price(price=price))
+            Watch.objects(identifier=identifier).filter(watchers__email=g.user.email).update_one(add_to_set__watchers__S__claims=price)
         # email user    
         email = g.user.email
         itinerary = alaskaUtils.itinerary_from_identifier(request.form['id'])
