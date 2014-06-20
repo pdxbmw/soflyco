@@ -1,4 +1,4 @@
-<li><a href="{{ url_for('search.select') }}">Search</a></li>
+    <li><a href="{{ url_for('search.select') }}">Search</a></li>
 {% if g.user %}
     <li class="dropdown" id="login_dropdown">
          <a class="dropdown-toggle" id="user_menu" data-toggle="dropdown" href="{{ url_for('users.home') }}">
@@ -31,4 +31,4 @@
 {% else %}
     <li><a href="{{ url_for('users.register') }}">Register</a></li>
     <li><a href="{{ url_for('users.login') }}">Login</a></li>
- {% endif %}   
+{% endif %}   

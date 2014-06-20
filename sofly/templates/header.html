@@ -1,37 +1,47 @@
 <div class="container">
-    <header class="row">
-        <button type="button" class="pull-left navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <h1 class="brand pull-left">
-            <a href="{{ url_for('index') }}">SoFly!</a>
-            <span class="badge beta">beta</span>
-        </h1>            
-        <div class="navbar collapse navbar-collapse pull-right" role="navigation">
-            <nav class="header">
-                <ul class="nav nav-pills navbar-nav pull-right hidden-md">
-                    {% include '_nav.html' %}    
-                </ul>
-                <ul class="nav nav-justified visible-md">
-                    {% include '_nav.html' %}    
-                </ul>                
-            </nav>
-        </div>       
-    </header>
-    <div class="row header-messages">
-        {% with messages = get_flashed_messages(with_categories=True) %}
-            {% if messages %}
-                <ul class="growl-alerts list-unstyled text-center">
-                    {% for category, message in messages %}
-                        <li class="alert alert-{{ category|default('info') }} alert-dismissable slidedown">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            {{ message|safe }}
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}        
-    </div> 
+	<header class="row">
+		<button type="button" class="navbar-toggle pull-left" data-toggle="offcanvas" data-recalc="false" data-target=".navmenu" data-canvas=".canvas">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+		<div class="hidden-xs">
+			<h1 class="brand pull-left">
+				<a class="logo" href="{{ url_for('index') }}">SoFly!</a>
+				<span class="badge beta">beta</span>
+			</h1>            
+			<div class="navbar collapse navbar-collapse pull-right hidden-xs" role="navigation">
+				<nav class="header">
+					<ul class="nav nav-pills navbar-nav pull-right hidden-xs">
+						{% include '_nav.html' %}    
+					</ul>
+				</nav>
+			</div>       
+		</div>
+		<nav class="navmenu navmenu-default navmenu-fixed-left offcanvas" role="navigation">
+			<div class="brand">
+				<a class="navmenu-brand logo" href="{{ url_for('index') }}">
+					SoFly!<span class="badge beta">beta</span>
+				</a>    
+			</div>        
+			<ul class="nav navmenu-nav">
+				{% include '_nav.html' %}    
+			</ul>
+		</nav>
+			
+	</header>
+	<div class="row header-messages">
+		{% with messages = get_flashed_messages(with_categories=True) %}
+			{% if messages %}
+				<ul class="growl-alerts list-unstyled text-center">
+					{% for category, message in messages %}
+						<li class="alert alert-{{ category|default('info') }} alert-dismissable slidedown">
+							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+							{{ message|safe }}
+						</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+		{% endwith %}        
+	</div> 
 </div>

@@ -63,6 +63,7 @@ $('#results').on('click', '.watch-fare', function() {
 
         var d = $('#results').data(),
             data = {
+                claim     : $this.hasClass('get-refund'),
                 code      : d.code,
                 id        : id.join('|') + '|' + d.travelers,
                 name      : d.name,                   
