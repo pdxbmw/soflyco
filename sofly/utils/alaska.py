@@ -22,11 +22,11 @@ Links = namedtuple('Links', 'get_discount_code, lookup_airport, lookup_reservati
 AIRPORTS = load_json_file('airports')
 
 URLS = Links(
-        'https://www.alaskaair.com/shared/tips/AboutDiscountCodes.aspx?view=0&referrer=summary&code=',
-        'http://www.alaskaair.com/HomeWidget/GetCities?prefixText=',
-        'https://www.alaskaair.com/booking/reservation-lookup',
-        'https://www.alaskaair.com/Shopping/Flights/Price',
-        'https://www.alaskaair.com/Shopping/Flights/Shop'
+    'https://www.alaskaair.com/shared/tips/AboutDiscountCodes.aspx?view=0&referrer=summary&code=',
+    'http://www.alaskaair.com/HomeWidget/GetCities?prefixText=',
+    'https://www.alaskaair.com/booking/reservation-lookup',
+    'https://www.alaskaair.com/Shopping/Flights/Price',
+    'https://www.alaskaair.com/Shopping/Flights/Shop'
 )
 
 class Segment(object):
@@ -52,6 +52,9 @@ class Flight(Segment):
     def __init__(self, **kwargs):
         super(Flight, self).__init__(**kwargs)
         self.add_segment()
+
+    def __repr__(self):
+        return 'Flight(orig=%s, dest=%s)' % (self.origin, self.destination)
 
     def __getitem__(self, key):
         return self.key
@@ -205,11 +208,17 @@ class Itinerary(object):
 
     @property
     def is_round_trip(self):
-        return len(self.flights) > 1 and self.flights[0].origin == self.flights[-1].destination
+        return (
+            len(self.flights) > 1 and self.flights[0].origin == self.flights[-1].destination and
+            len(self.flights) > 1 and self.flights[0].destination == self.flights[-1].origin
+        )
 
     @property
     def is_multi_city(self):
-        return len(self.flights) > 1 and self.flights[0].origin != self.flights[-1].destination
+        return (
+            len(self.flights) > 1 and self.flights[0].origin != self.flights[-1].destination or
+            len(self.flights) > 1 and self.flights[0].destination != self.flights[-1].origin
+        )
 
     @property
     def attrs(self):
@@ -232,12 +241,6 @@ class Reservation(Itinerary):
         self.submit_attempts = 0
         self.last_name = kwargs.get('name')
         self.ticket_code = kwargs.get('code')
-
-    #def __getitem__(self, key):
-    #    return self.key
-
-    #def __setitem__(self, key, item):
-    #    self[key] = item
 
     def abort(self):
         raise FlashMessage("Hmm, we couldn't locate a reservation. Make sure your information is correct and try again.",\
