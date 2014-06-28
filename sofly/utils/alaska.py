@@ -308,7 +308,7 @@ class Reservation(Itinerary):
             discount_src = self.html('#DiscountCodeTermsFrame')
             element = self.html('#priceSummaryContent').text().lower()
             match = re.search('discount code: (.*)', element)
-            if match: 
+            if match:
                 response = requests.get(URLS.get_discount_code + match.group(1))
                 self.discount = float(response.content.split('$')[1].split()[0])
         except Exception as e:
