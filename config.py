@@ -80,6 +80,7 @@ class ProductionConfig(Config):
     MONGODB_PORT = 27017 or int(os.environ.get('MONGODB_PORT', 27017))
     MONGODB_USERNAME = os.environ.get('MONGODB_USERNAME', '')
     MONGODB_PASSWORD = os.environ.get('MONGODB_PASSWORD', '')
+    RECAPTCHA_USE_SSL = True
     SERVER_NAME = 'sofly.co'    
 
 config = {

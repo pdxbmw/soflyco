@@ -264,3 +264,6 @@ NOsF/5oirpt9P/FlUQqmMGqz9IgcgA38corog14=
 # change permissions
 chown dokku:dokku server.*
 chmod 600 server.*
+
+# add nightly crawler
+0 15 * * * bash -c ': | PATH="$PATH:/usr/local/bin" dokku run sofly.co python crawl.py' > /tmp/crawl.output
