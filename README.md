@@ -53,8 +53,21 @@ git clone https://github.com/rlaneve/dokku-link.git link
 # do install
 dokku plugins-install
 
+# optional: if setting up new droplet
+# verify sofly repo setup
+git remote rm dokku 
+git remote add dokku dokku@sofly.co:sofly.co
+git push dokku master
+
 # set flask config
-dokku config:set sofly FLASK_CONFIG=production
+dokku config:set sofly.co FLASK_CONFIG=production
+
+# create memcached
+dokku memcached:create sofly.co
+
+# create mongodb database
+dokku mongodb:start
+dokku mongodb:create sofly.co sofly
 
 # manual start with docker
 # docker run -t -i -e PORT=5000 app/sofly /bin/bash -c "/start web"
