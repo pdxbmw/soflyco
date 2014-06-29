@@ -81,7 +81,7 @@ class ProductionConfig(Config):
     MONGODB_USERNAME = os.environ.get('MONGODB_USERNAME', '')
     MONGODB_PASSWORD = os.environ.get('MONGODB_PASSWORD', '')
     RECAPTCHA_USE_SSL = True
-    SERVER_NAME = 'sofly.co'    
+    SERVER_NAME = 'www.sofly.co'    
 
 config = {
     'development': DevelopmentConfig,
