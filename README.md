@@ -264,8 +264,3 @@ NOsF/5oirpt9P/FlUQqmMGqz9IgcgA38corog14=
 # change permissions
 chown dokku:dokku server.*
 chmod 600 server.*
-
-# enable the certificates by editing /etc/nginx/conf.d/dokku.conf and uncommenting these two lines:
-vi /etc/nginx/conf.d/dokku.conf
-# ssl_certificate /home/dokku/tls/server.crt;
-# ssl_certificate_key /home/dokku/tls/server.key;
