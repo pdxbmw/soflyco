@@ -75,6 +75,7 @@ dokku mongodb:link sofly.co sofly
 
 # manual start with docker
 # docker run -t -i -e PORT=5000 app/sofly.co /bin/bash -c "/start web"
+# docker restart `cat /home/dokku/sofly.co/CONTAINER`
 
 # install npm and less
 sudo apt-add-repository ppa:chris-lea/node.js

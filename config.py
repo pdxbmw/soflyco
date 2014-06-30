@@ -77,7 +77,7 @@ class ProductionConfig(Config):
     MONGO_URL = os.environ.get('MONGO_URL')    
     MONGODB_DB = os.environ.get('MONGODB_DATABASE')
     MONGODB_HOST = os.environ.get('MONGODB_HOST')
-    MONGODB_PORT = 27017 or int(os.environ.get('MONGODB_PORT', 27017))
+    MONGODB_PORT =  int(os.environ.get('MONGODB_PORT', 27017))
     MONGODB_USERNAME = os.environ.get('MONGODB_USERNAME', '')
     MONGODB_PASSWORD = os.environ.get('MONGODB_PASSWORD', '')
     RECAPTCHA_USE_SSL = True
