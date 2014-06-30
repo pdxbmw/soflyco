@@ -378,7 +378,7 @@ class Reservation(Itinerary):
 
     def set_num_travelers(self):
         text = self.html('.totalPriceDiv > div > h4').text().split()
-        self.num_travelers = text[3]
+        self.num_travelers = text[3] if text else 1
 
     def set_payment_method(self):
         text = self.html('#divFareAndTaxes > div:first > .amount').text().lower().replace(',','')
