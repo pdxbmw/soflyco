@@ -266,5 +266,48 @@ NOsF/5oirpt9P/FlUQqmMGqz9IgcgA38corog14=
 chown dokku:dokku server.*
 chmod 600 server.*
 
+# nginx.conf
+upstream sofly.co { server 127.0.0.1:49154; }
+server {
+  listen              [::]:443 ssl spdy;
+  listen              443 ssl spdy;
+  server_name         www.sofly.co;
+  ssl_certificate     /home/dokku/sofly.co/tls/server.crt;
+  ssl_certificate_key /home/dokku/sofly.co/tls/server.key;
+
+  keepalive_timeout   70;
+  add_header          Alternate-Protocol  443:npn-spdy/2;
+
+  location    / {
+    proxy_pass  http://sofly.co;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_set_header X-Forwarded-Port $server_port;
+    proxy_set_header X-Request-Start $msec;
+  }
+
+}
+server {
+  listen      [::]:80;
+  listen      80;
+  server_name www.sofly.co;
+  return 301 https://$host$request_uri;
+}
+server {
+  listen               *:80;
+  listen               *:443 ssl spdy;
+  listen               [::]:80;
+  listen               [::]:443 ssl spdy;
+  server_name          sofly.co;
+  ssl_certificate      /home/dokku/sofly.co/tls/server.crt;
+  ssl_certificate_key  /home/dokku/sofly.co/tls/server.key;
+
+  return 301 https://www.$host$request_uri;
+}
+
 # add nightly crawler
 0 15 * * * bash -c ': | PATH="$PATH:/usr/local/bin" dokku run sofly.co python crawl.py' > /tmp/crawl.output
