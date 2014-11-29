@@ -287,6 +287,9 @@ class Reservation(Itinerary):
 
             text = self.html('#FlightDetailInfo_%s' % index).text().lower()
             table = self.html('#FlightDetailInfo_%s .Details' % index)
+            print len(table)
+            if not len(table):
+                table = self.html('#FlightDetailInfo_%s .SegmentContainer' % index)
             first_row = table.find('tr').eq(1)
             second_row = table.find('tr').eq(2)
             airline_code = first_row.find('img').attr('src')[-7:-5]
