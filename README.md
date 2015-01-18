@@ -1,14 +1,9 @@
 https://www.digitalocean.com/community/articles/how-to-deploy-a-flask-application-on-an-ubuntu-vps
 sudo apt-get install python-dev
-Y
 sudo apt-get install libevent-dev
-Y
 sudo apt-get install libxml2-dev
-Y
 sudo apt-get install libxslt1-dev
-Y
 sudo apt-get install -y zlib1g-dev
-Y
 
 
 # Setting up Dokku
@@ -81,7 +76,7 @@ dokku mongodb:create www sofly
 dokku mongodb:link www sofly
 
 # manual start with docker
-# docker run -t -i -e PORT=5000 app/sofly.co /bin/bash -c "/start web"
+# docker run -t -i -e PORT=5000 dokku/www /bin/bash -c "/start web"
 # docker restart `cat /home/dokku/sofly.co/CONTAINER`
 
 # install npm and less
