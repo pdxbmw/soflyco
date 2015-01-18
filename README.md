@@ -1,9 +1,14 @@
 https://www.digitalocean.com/community/articles/how-to-deploy-a-flask-application-on-an-ubuntu-vps
 sudo apt-get install python-dev
+Y
 sudo apt-get install libevent-dev
+Y
 sudo apt-get install libxml2-dev
-sudo apt-get install libxslt1-dev 
+Y
+sudo apt-get install libxslt1-dev
+Y
 sudo apt-get install -y zlib1g-dev
+Y
 
 
 # Setting up Dokku
@@ -61,19 +66,19 @@ dokku plugins-install
 # optional: if setting up new droplet
 # verify sofly repo setup
 git remote rm dokku 
-git remote add dokku dokku@sofly.co:www.sofly.co
+git remote add dokku dokku@sofly.co:www
 git push dokku master
 
 # set flask config
-dokku config:set sofly.co FLASK_CONFIG=production
+dokku config:set www FLASK_CONFIG=production
 
 # create memcached
-dokku memcached:create sofly.co
+dokku memcached:create www
 
 # create mongodb database
 dokku mongodb:start
-dokku mongodb:create sofly.co sofly
-dokku mongodb:link sofly.co sofly
+dokku mongodb:create www sofly
+dokku mongodb:link www sofly
 
 # manual start with docker
 # docker run -t -i -e PORT=5000 app/sofly.co /bin/bash -c "/start web"
@@ -86,7 +91,7 @@ sudo apt-get install nodejs
 sudo npm install -g less
 
 # add ssl support
-mkdir /home/dokku/sofly.co/tls
+mkdir /home/dokku/www/tls
 
 # create server.key
 -----BEGIN RSA PRIVATE KEY-----
@@ -274,8 +279,8 @@ server {
   listen              [::]:443 ssl spdy;
   listen              443 ssl spdy;
   server_name         www.sofly.co;
-  ssl_certificate     /home/dokku/sofly.co/tls/server.crt;
-  ssl_certificate_key /home/dokku/sofly.co/tls/server.key;
+  ssl_certificate     /home/dokku/www/tls/server.crt;
+  ssl_certificate_key /home/dokku/www/tls/server.key;
 
   keepalive_timeout   70;
   add_header          Alternate-Protocol  443:npn-spdy/2;
@@ -305,8 +310,8 @@ server {
   listen               [::]:80;
   listen               [::]:443 ssl spdy;
   server_name          sofly.co;
-  ssl_certificate      /home/dokku/sofly.co/tls/server.crt;
-  ssl_certificate_key  /home/dokku/sofly.co/tls/server.key;
+  ssl_certificate      /home/dokku/www/tls/server.crt;
+  ssl_certificate_key  /home/dokku/www/tls/server.key;
 
   return 301 https://www.$host$request_uri;
 }
