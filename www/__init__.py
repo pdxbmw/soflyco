@@ -2,13 +2,13 @@ from flask.ext.assets import Environment, Bundle
 from flask.ext.mongoengine import MongoEngine, MongoEngineSessionInterface
 from werkzeug.contrib.fixers import ProxyFix
 
-from sofly import assets
-from sofly.helpers import Flask
-from sofly.middleware import MethodRewriteMiddleware
-from sofly.session import MongoSessionInterface
-from sofly.utils.cache import CacheUtils
-from sofly.utils.mail import MailUtils
-from sofly.utils.security import SecurityUtils
+from www import assets
+from www.helpers import Flask
+from www.middleware import MethodRewriteMiddleware
+from www.session import MongoSessionInterface
+from www.utils.cache import CacheUtils
+from www.utils.mail import MailUtils
+from www.utils.security import SecurityUtils
 
 from logging.handlers import SysLogHandler
 from config import config
@@ -77,7 +77,7 @@ def create_app(config_name):
         """
         from flask import g, session
         from bson import ObjectId
-        from sofly.modules.users.models import User
+        from www.modules.users.models import User
         g.user = None
         if 'user_id' in session:
             g.user = User.objects.get(id=ObjectId(session['user_id']))    
@@ -90,12 +90,12 @@ def create_app(config_name):
     return app
 
 def register_blueprints(app):
-    from sofly.modules.views import module as base_module
-    from sofly.modules.errors import module as errors_module
-    from sofly.modules.filters import module as filters_module
-    from sofly.modules.results.views import module as results_module
-    from sofly.modules.search.views import module as search_module
-    from sofly.modules.users.views import module as users_module
+    from www.modules.views import module as base_module
+    from www.modules.errors import module as errors_module
+    from www.modules.filters import module as filters_module
+    from www.modules.results.views import module as results_module
+    from www.modules.search.views import module as search_module
+    from www.modules.users.views import module as users_module
 
     app.register_blueprint(base_module)
     app.register_blueprint(errors_module)
@@ -109,7 +109,7 @@ def register_blueprints(app):
 #import sofly.apps.common.session
 #import sofly.views    
 
-#from sofly import config
+#from www import config
 #from flask_debugtoolbar import DebugToolbarExtension
 #from logging.handlers import RotatingFileHandler
 

@@ -9,13 +9,13 @@ from werkzeug import check_password_hash, generate_password_hash
 
 from config import config
 
-from sofly import db, mail, security
-from sofly.decorators import login_required
-from sofly.helpers import is_ajax
-from sofly.modules.users.forms import RegisterForm, LoginForm, UserForm
-from sofly.modules.users.models import User
-from sofly.modules.results.models import Watch
-from sofly.utils.alaska import Itinerary
+from www import db, mail, security
+from www.decorators import login_required
+from www.helpers import is_ajax
+from www.modules.users.forms import RegisterForm, LoginForm, UserForm
+from www.modules.users.models import User
+from www.modules.results.models import Watch
+from www.utils.alaska import Itinerary
 
 module = Blueprint('users', __name__, url_prefix='/users')
 

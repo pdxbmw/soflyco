@@ -1,7 +1,7 @@
-import sofly
-from sofly import mail
-from sofly.modules.results.models import Watch
-from sofly.modules.users.models import User
+import www
+from www import mail
+from www.modules.results.models import Watch
+from www.modules.users.models import User
 
 import datetime
 

@@ -1,9 +1,9 @@
 from flask import abort, Blueprint, g, redirect, \
     render_template, request, session
 
-from sofly.helpers import redirect_url
-from sofly.utils.crawler import CrawlerUtils
-from sofly.modules.users.views import User
+from www.helpers import redirect_url
+from www.utils.crawler import CrawlerUtils
+from www.modules.users.views import User
 
 module = Blueprint('base', __name__)
 

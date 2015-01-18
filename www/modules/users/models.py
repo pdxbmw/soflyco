@@ -1,5 +1,5 @@
-from sofly import db
-from sofly.modules.users import constants as USER
+from www import db
+from www.modules.users import constants as USER
 import datetime
 
 class User(db.Document):

@@ -4,8 +4,8 @@ import time
 
 from multiprocessing import Process
 
-from sofly import create_app
-from sofly.utils.crawler import CrawlerUtils
+from www import create_app
+from www.utils.crawler import CrawlerUtils
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 crawler = CrawlerUtils(app)

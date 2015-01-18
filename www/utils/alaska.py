@@ -1,7 +1,7 @@
 from flask import abort, current_app, session
 
-from sofly import cache, security
-from sofly.helpers import FlashMessage, InvalidUsage, load_json_file
+from www import cache, security
+from www.helpers import FlashMessage, InvalidUsage, load_json_file
 
 from collections import namedtuple, OrderedDict
 from copy import deepcopy

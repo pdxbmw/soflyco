@@ -1,5 +1,5 @@
-from sofly import db
-from sofly.modules.users.models import User
+from www import db
+from www.modules.users.models import User
 
 import datetime
 

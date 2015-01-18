@@ -1,6 +1,6 @@
 from flask import abort, g, flash, redirect, request, session, url_for
 
-from sofly.helpers import is_ajax
+from www.helpers import is_ajax
 
 from functools import wraps
 

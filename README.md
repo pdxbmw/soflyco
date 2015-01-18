@@ -56,10 +56,12 @@ git clone https://github.com/scottatron/dokku-rebuild rebuild
 # do install
 dokku plugins-install
 
+# goto domain and finish dokku install
+
 # optional: if setting up new droplet
 # verify sofly repo setup
 git remote rm dokku 
-git remote add dokku dokku@sofly.co:sofly.co
+git remote add dokku dokku@sofly.co:www.sofly.co
 git push dokku master
 
 # set flask config

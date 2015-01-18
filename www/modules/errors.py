@@ -1,7 +1,7 @@
 from flask import Blueprint, current_app, jsonify, \
     flash, make_response, redirect, render_template
     
-from sofly.helpers import FlashMessage, InvalidUsage, \
+from www.helpers import FlashMessage, InvalidUsage, \
     redirect_url
     
 module = Blueprint('errors', __name__)

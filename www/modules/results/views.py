@@ -3,10 +3,10 @@ from flask import Blueprint, flash, g, jsonify, make_response, \
 
 from itsdangerous import BadSignature
 
-from sofly import mail, security
-from sofly.decorators import *
-from sofly.modules.results.models import Price, Watch, Watcher
-from sofly.utils.alaska import AlaskaUtils
+from www import mail, security
+from www.decorators import *
+from www.modules.results.models import Price, Watch, Watcher
+from www.utils.alaska import AlaskaUtils
 
 import datetime
 
@@ -54,7 +54,7 @@ def reservation():
 
 @module.route('/unwatch/<payload>', methods=['GET'])
 def unwatch_from_email(payload):
-    from sofly.helpers import redirect_url
+    from www.helpers import redirect_url
     s = security.get_serializer()
     try:
         (identifier, email) = s.loads(payload)

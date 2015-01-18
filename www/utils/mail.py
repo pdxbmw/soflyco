@@ -32,7 +32,7 @@ class MailUtils(object):
         return text   
 
     def render_template(self, tmpl, template_values):
-        from sofly.modules import filters
+        from www.modules import filters
         env = Environment(loader=FileSystemLoader(self.template_dir))
         
         env.filters['duration'] = filters.duration
@@ -48,7 +48,7 @@ class MailUtils(object):
                 ).transform()   
 
     def send_activation_email(self, user=None, **kwargs):
-        from sofly import helpers
+        from www import helpers
         user = user or g.user
         url = helpers.get_activation_link(user.id) 
         html = self.render_template('email/welcome.html', dict(activate_url=url))
@@ -56,7 +56,7 @@ class MailUtils(object):
         return url
 
     def send_basic_email(self, user=None, **kwargs):
-        from sofly import helpers
+        from www import helpers
         #user = user or g.user
         #url = helpers.get_activation_link(user.id) 
         html = self.render_template('email/basic.html', {})
@@ -73,7 +73,7 @@ class MailUtils(object):
         server.quit() 
 
     def send_fare_alert(self, watcher, search):
-        from sofly import helpers
+        from www import helpers
         itinerary, subject = search.itineraries[0], ''
         for flight in itinerary.flights:
             subject += '%s%s to %s on %s ' % (
@@ -98,7 +98,7 @@ class MailUtils(object):
             print "Error. No fare alert sent."    
 
     def watching_template(self, request, itinerary, email):
-        from sofly.helpers import get_unwatch_link
+        from www.helpers import get_unwatch_link
         unwatch_link = get_unwatch_link(itinerary.identifier, email)
         itinerary.price = request.form.get('price')
         context = dict(

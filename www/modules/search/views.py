@@ -1,9 +1,9 @@
 from flask import Blueprint, request, render_template, flash, g, session, redirect, url_for
 from flask import abort, jsonify, make_response
 
-from sofly import db
-from sofly.modules.search.forms import OneForm, MultiForm
-from sofly.utils.alaska import AlaskaUtils
+from www import db
+from www.modules.search.forms import OneForm, MultiForm
+from www.utils.alaska import AlaskaUtils
 
 import json
 

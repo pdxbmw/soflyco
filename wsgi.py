@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from sofly import create_app
+from www import create_app
 
 import os
 

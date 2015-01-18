@@ -39,19 +39,19 @@ def _get_link(route, payload):
     return url   
 
 def get_activation_link(_id):
-    from sofly import security
+    from www import security
     s = security.get_serializer()
     payload = s.dumps(str(_id))
     return _get_link(route='users.activate_user', payload=payload)
 
 def get_claim_link(identifier, email, price):    
-    from sofly import security
+    from www import security
     s = security.get_serializer()
     payload = s.dumps((identifier, email, price))
     return _get_link(route='results.claim', payload=payload)
 
 def get_unwatch_link(identifier, email):    
-    from sofly import security
+    from www import security
     s = security.get_serializer()
     payload = s.dumps((identifier, email))
     return _get_link(route='results.unwatch_from_email', payload=payload)    
