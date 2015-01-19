@@ -248,25 +248,23 @@ class Reservation(Itinerary):
 
     def build_itinerary(self):
 
-        def get_airport(element, string):
-            node = element.find('td').filter(lambda i: string in pq(this).text().lower()).text()
-            return re.search("^.*\((.*)\).*$", node).group(1)[:3]
+        def get_airport(text):
+            return re.search("^.*\((.*)\).*$", text).group(1)[:3]
 
         def get_cabin():
             text = self.html('.flightstable > tr').eq((index * 3)-1).text().lower()   
             return 'first' if re.match("^.*first.\(.\).*$", text) else 'coach'
 
-        def get_datetime(element, index):
-            date = element.find('.FlightTimeContainer').text().split()
+        def get_datetime(text, index):
+            date = text.split()
             # Trying lookup by abbreviated date
             months = {'Jan':1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,'Jul':7,'Aug':8,'Sep':9,'Oct':10,'Nov':11,'Dec':12}
-            month = months[date[3]]
-            (month, day) = (months[date[3]], date[4])
+            (month, day) = (months[date[5]], date[6])
             twelve_hour = '%s %s' % (date[0], date[1])
             twenty_four = datetime.datetime.strptime(twelve_hour, '%I:%M %p').strftime('%H:%M').split(':')
             # Just using travel dates for year now
             year = [i.split('-')[0] for i in self.travel_dates if int(i.split('-')[1]) == month][0]
-            return datetime.datetime(int(year), int(month), int(date[4]), int(twenty_four[0]), int(twenty_four[1]))
+            return datetime.datetime(int(year), int(month), int(day), int(twenty_four[0]), int(twenty_four[1]))
 
         def get_duration(text):
             match = re.search('duration:(.*) ours (.*) inutes', text)
@@ -286,21 +284,20 @@ class Reservation(Itinerary):
             index += 1
 
             text = self.html('#FlightDetailInfo_%s' % index).text().lower()
-            table = self.html('#FlightDetailInfo_%s .Details' % index)
-            print len(table)
-            if not len(table):
-                table = self.html('#FlightDetailInfo_%s .SegmentContainer' % index)
-            first_row = table.find('tr').eq(1)
-            second_row = table.find('tr').eq(2)
-            airline_code = first_row.find('img').attr('src')[-7:-5]
-            flight_number = first_row.find('td').eq(0).text().split()[1]
+            details = self.html('#FlightDetailInfo_%s .SegmentContainer' % index)
+            airline_code = details.find('.DetailsCarrierImage').attr('id')
+            flight_number = details.find('.DetailsFlightNumber').text().split()[-1]
+            origin = details.find('.DetailsStation').eq(0).text()
+            destination = details.find('.DetailsStation').eq(1).text()
+            depart = details.find('.DetailsTime').eq(0).text()
+            arrive = details.find('.DetailsTime').eq(1).text()
 
             flight = self.add_flight(
-                number = airline_code + flight_number,
-                origin = get_airport(first_row, 'depart'),
-                destination = get_airport(second_row, 'arrive'),                
-                depart = get_datetime(first_row, index - 1),
-                arrive = get_datetime(second_row, index - 1)
+                number = airline_code + flight_number,              
+                origin = get_airport(origin),
+                destination = get_airport(destination),
+                depart = get_datetime(depart, index - 1),
+                arrive = get_datetime(arrive, index - 1)
             )
 
             flight.cabin = get_cabin()
@@ -352,6 +349,7 @@ class Reservation(Itinerary):
             cached = cache.get(self.cache_key)
             
             if not cached:
+                print('requesting {} {}'.format(URLS.lookup_reservation, values))
                 response = requests.post(URLS.lookup_reservation, data=values)
                 content = response.content
                 current_app.logger.debug("Caching Alaska reservation search.")
@@ -424,6 +422,7 @@ class Reservation(Itinerary):
 
     def set_travel_dates(self):
         try:
+
             attribute = self.html('.head.hotel a').attr('onclick')
             if attribute:
                 match = re.search('^.*DateRange=(.*?)&.*$', attribute).group(1)
@@ -775,6 +774,7 @@ class AlaskaUtils:
         return AIRPORTS[airport_code]
 
     def airports(self, request):
+        logger.debug('requesting {}{}'.format(URLS.lookup_airport, request.args.get('q','')))
         response = requests.get('%s%s' % (URLS.lookup_airport, request.args.get('q','')))
         return response.json()
 
