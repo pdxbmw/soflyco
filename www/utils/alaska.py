@@ -775,7 +775,7 @@ class AlaskaUtils:
         return AIRPORTS[airport_code]
 
     def airports(self, request):
-        logger.debug('requesting {}{}'.format(URLS.lookup_airport, request.args.get('q','')))
+        current_app.logger.debug('requesting {}{}'.format(URLS.lookup_airport, request.args.get('q','')))
         response = requests.get('%s%s' % (URLS.lookup_airport, request.args.get('q','')))
         return response.json()
 
