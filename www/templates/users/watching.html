@@ -79,15 +79,15 @@
 
         </section>
 
-        {% if itineraries %}
-
         <section id="currently_watching" class="row top-buffer text-center">
             
             <h3 class="inset">Currently Watching</h3>
 
+            {% if itineraries and num_watching %}
+
             {% for itinerary in itineraries %}
                 {% if itinerary.watching %}
-                <div class="watching">
+                <div class="watching" data-num-travelers="{{ itinerary.num_travelers }}">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3>
@@ -168,9 +168,13 @@
                 {% endif %}                      
             {% endfor %}
 
-        </section>
+            {% else %}
 
-        {% endif %}
+                <div class="well text-center text-danger top-buffer">You are not currently watching any flights.</div>
+
+            {% endif %}            
+
+        </section>
 
     </div>
 
@@ -187,6 +191,8 @@
             $parent.find('.table-selection tr').each(function() {
                 id.push($(this).data('identifier'));
             });
+
+            id.push($parent.data('num-travelers'));
 
             $this.button('loading');
 

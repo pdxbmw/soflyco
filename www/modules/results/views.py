@@ -75,11 +75,11 @@ def unwatch():
         identifier = request.form.get('id')
         # create or update document
         doc = Watch.objects(identifier=identifier, watchers__email=g.user.email).update_one(set__watchers__S__watching=False)
-        response = 'success' if unwatch else 'error'
+        response = 'success' if doc else 'error'
         # email user    
         email = g.user.email
         itinerary = alaskaUtils.itinerary_from_identifier(identifier)
-        body = mail.watching_template(request, itinerary)
+        body = mail.watching_template(request, itinerary, email)
         #mail.send_email(g.user.email, 'Fare Alert Removed', body)   
     return jsonify(status=response)  
 
@@ -122,7 +122,8 @@ def watch():
                 watchers = [watcher]
                 )
             watch.save()
-        if request.form.get('claim'):
+        print(request.form)
+        if request.form.get('claim') == 'true':
             Watch.objects(identifier=identifier).filter(watchers__email=g.user.email).update_one(add_to_set__watchers__S__claims=price)
         # email user    
         email = g.user.email

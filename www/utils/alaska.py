@@ -196,7 +196,8 @@ class Itinerary(object):
 
     @property
     def identifier(self):
-        return '%s|%s' % ('|'.join([flight.identifier for flight in self.flights]), self.num_travelers)
+        num_travelers = self.num_travelers if hasattr(self, 'num_travelers') else '1'
+        return '%s|%s' % ('|'.join([flight.identifier for flight in self.flights]), num_travelers)
 
     @property
     def num_flights(self):

@@ -40,7 +40,7 @@ def refund():
 @login_required
 def watching():
     watched = Watch.objects(watchers__email=g.user.email).no_dereference()
-    claims, refunded = 0, 0
+    claims, refunded, num_watching = 0, 0, 0
     itineraries = []
     for watch in watched:
         itinerary = Itinerary().from_identifier(watch.identifier)
@@ -50,6 +50,8 @@ def watching():
                 itinerary.claims = watcher.claims
                 itinerary.paid = watcher.reservation['paid']
                 itinerary.watching = watcher.watching
+                if (itinerary.watching):
+                    num_watching += 1
                 claims += len(watcher.claims)
                 if len(watcher.claims):
                     refunded += float(watcher.reservation['paid']) - \
@@ -62,6 +64,7 @@ def watching():
         claims = claims,
         refunded = refunded,
         itineraries = itineraries,
+        num_watching = num_watching,
         watching = watched
     )
     return render_template('users/watching.html', **context)
