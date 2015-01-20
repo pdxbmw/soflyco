@@ -40,7 +40,7 @@ class CrawlerUtils(object):
 
         """
         if doc.search_params:
-            search = sofly.utils.alaska.AlaskaUtils().crawl(doc.search_params)
+            search = www.utils.alaska.AlaskaUtils().crawl(doc.search_params)
             if search:
                 identifier = doc.identifier
                 search.set_itinerary_by_identifier(identifier)

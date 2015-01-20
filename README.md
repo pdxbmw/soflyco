@@ -312,4 +312,4 @@ server {
 }
 
 # add nightly crawler
-0 15 * * * bash -c ': | PATH="$PATH:/usr/local/bin" dokku run sofly.co python crawl.py' > /tmp/crawl.output
+0 15 * * * bash -c ': | PATH="$PATH:/usr/local/bin" dokku run www python crawl.py' > /tmp/crawl.output
