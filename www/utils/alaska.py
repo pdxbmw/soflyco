@@ -196,7 +196,7 @@ class Itinerary(object):
 
     @property
     def identifier(self):
-        num_travelers = self.num_travelers if hasattr(self, 'num_travelers') else '1'
+        num_travelers = self.num_travelers if hasattr(self, 'num_travelers') else 1
         return '%s|%s' % ('|'.join([flight.identifier for flight in self.flights]), num_travelers)
 
     @property
@@ -350,7 +350,7 @@ class Reservation(Itinerary):
             cached = cache.get(self.cache_key)
             
             if not cached:
-                print('requesting {} {}'.format(URLS.lookup_reservation, values))
+                current_app.logger.debug('Requesting {} {}'.format(URLS.lookup_reservation, values))
                 response = requests.post(URLS.lookup_reservation, data=values)
                 content = response.content
                 current_app.logger.debug("Caching Alaska reservation search.")
@@ -718,7 +718,6 @@ class Search(object):
             params = self.reservation.search_params if self.reservation else self.request.form
             allowed_params = ['IsRoundTrip','IsOneWay','IsMultiCity','ReturnDate','CabinType','flightType','AdultCount','ChildrenCount']
             allowed_params.extend([param + str(index + 1) for index in range(4) for param in ['DepartureCity','DepartureDate','ArrivalCity']])
-            print params
             return {key: params[key] for key in params if key in allowed_params}
         except Exception as e:
             current_app.logger.debug("No search params sent with request.")
@@ -802,5 +801,6 @@ class AlaskaUtils:
 
     def search(self, request, reservation=None):
         search = Search(request)
+        print(('reservation', reservation))
         search.dispatcher(reservation)
         return search
