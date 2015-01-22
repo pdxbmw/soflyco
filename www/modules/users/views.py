@@ -5,6 +5,7 @@ from authomatic import Authomatic
 from authomatic.adapters import WerkzeugAdapter
 from bson import ObjectId
 from itsdangerous import BadSignature
+from mongoengine import NotUniqueError
 from werkzeug import check_password_hash, generate_password_hash
 
 from config import config
@@ -192,15 +193,18 @@ def register():
             password = generate_password_hash(form.password.data)
             )
         # Insert the record in our database and commit it
-        user.save()
-
-        # Log the user in, as he now has an id
-        session['user_id'] = user.id
-        
-        # flash will display a message to the user
-        flash("Welcome to SoFly! An email has been sent to verify your email address.", 'info')        
-        mail.send_activation_email(user=user)
-        
-        # redirect user to the 'home' method of the user module.
-        return redirect(url_for('users.home'))
+        try:
+            user.save()
+        except NotUniqueError:
+            form.email.errors.append('Email address is already registered')
+        else:
+            # Log the user in, as he now has an id
+            session['user_id'] = user.id
+            
+            # flash will display a message to the user
+            flash("Welcome to SoFly! An email has been sent to verify your email address.", 'info')        
+            mail.send_activation_email(user=user)
+            
+            # redirect user to the 'home' method of the user module.
+            return redirect(url_for('users.home'))
     return render_template("users/register.html", form=form)    

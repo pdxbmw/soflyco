@@ -313,3 +313,5 @@ server {
 
 # add nightly crawler
 0 15 * * * bash -c ': | PATH="$PATH:/usr/local/bin" dokku run www python crawl.py' > /tmp/crawl.output
+#* * * * * sudo -u dokku bash -c ': | PATH="$PATH:/usr/local/bin" /usr/local/bin/dokku run www python crawl.py' > /tmp/crawl.output 2>&1
+#0 15 * * * bash -c ': | PATH="$PATH:/usr/local/bin" docker run -t dokku/www /exec python crawl.py' > /tmp/crawl.output 2>&1
