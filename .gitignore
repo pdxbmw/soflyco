@@ -41,3 +41,6 @@ nosetests.xml
 # Virtual environment
 venv
 .DS_Store
+
+/SETUP.md
+/config.py
